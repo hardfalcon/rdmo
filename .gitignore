@@ -35,5 +35,9 @@ dist
 .on-save.json
 
 rdmo/management/static
+<<<<<<< HEAD
 
 screenshots
+=======
+rdmo/projects/static
+>>>>>>> 0ba10f0d (edit .gitignore)
