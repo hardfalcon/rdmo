@@ -61,5 +61,19 @@ module.exports = [
       publicPath: '/static/management/',
       path: path.resolve(__dirname, '../rdmo/management/static/management/'),
     }
+  }),
+  merge(base, {
+    name: 'projects',
+    entry: {
+      projects: [
+        './rdmo/projects/assets/js/projects.js',
+        './rdmo/projects/assets/scss/projects.scss'
+      ]
+    },
+    output: {
+      filename: 'js/projects.js',
+      publicPath: '/static/projects/',
+      path: path.resolve(__dirname, '../rdmo/projects/static/projects/'),
+    }
   })
 ]
