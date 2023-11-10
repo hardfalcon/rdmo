@@ -35,3 +35,4 @@ dist
 .on-save.json
 
 rdmo/management/static
+rdmo/projects/static
