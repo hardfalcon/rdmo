@@ -3,32 +3,37 @@ import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
-import * as projectActions from '../actions/projectsActions'
+import * as projectsActions from '../actions/projectsActions'
+import * as userActions from '../actions/userActions'
 import Projects from '../components/main/Projects'
 
-const Main = ({ projectActions, projects }) => {
-    // check if anything was loaded yet
+const Main = ({ projectsActions, projects, userActions, currentUser }) => {
+  console.log('currentUser %o', currentUser)
     if (!isEmpty(projects)) {
-      return <Projects projects={projects} projectActions={projectActions} />
+      return <Projects currentUserObject={currentUser} projectsObject={projects} projectsActions={projectsActions} userActions={userActions} />
     }
 
     return null
 }
 
 Main.propTypes = {
-  projectActions: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  projectsActions: PropTypes.object.isRequired,
   projects: PropTypes.object.isRequired,
+  userActions: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
   return {
+    currentUser: state.currentUser,
     projects: state.projects,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    projectActions: bindActionCreators(projectActions, dispatch),
+    projectsActions: bindActionCreators(projectsActions, dispatch),
+    userActions: bindActionCreators(userActions, dispatch),
   }
 }
 

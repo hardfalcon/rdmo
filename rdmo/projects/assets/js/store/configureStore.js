@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers/rootReducer'
+import * as userActions from '../actions/userActions'
 import * as projectsActions from '../actions/projectsActions'
 
 export default function configureStore() {
@@ -16,11 +17,11 @@ export default function configureStore() {
     applyMiddleware(...middlewares)
   )
 
-  console.log('store')
-
   window.addEventListener('load', () => {
     console.log('event listener')
+    store.dispatch(userActions.fetchCurrentUser())
     store.dispatch(projectsActions.fetchAllProjects())
+    store.dispatch(projectsActions.setViewMyProjects(false))
   })
 
   return store

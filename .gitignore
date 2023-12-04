@@ -36,8 +36,14 @@ dist
 
 rdmo/management/static
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 screenshots
 =======
 rdmo/projects/static
 >>>>>>> 0ba10f0d (edit .gitignore)
+=======
+rdmo/projects/static/projects/js/projects.js
+rdmo/projects/static/projects/css/projects.css
+rdmo/projects/static/projects/fonts
+>>>>>>> cce1ec12 (add-react-projects-site)
