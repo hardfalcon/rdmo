@@ -1,7 +1,10 @@
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS } from '../actions/types'
 
+const MY_PROJECTS = 'projects/myProjects'
+
 const initialState = {
   projects: [],
+  myProjects: true,
 }
 
 export default function projectsReducer(state = initialState, action) {
@@ -13,6 +16,8 @@ export default function projectsReducer(state = initialState, action) {
       return {...state, ...action.projects}
     case FETCH_PROJECTS_ERROR:
       return {...state, errors: action.error.errors}
+    case MY_PROJECTS:
+      return {...state, ...action.myProjects}
     default:
        return state
   }

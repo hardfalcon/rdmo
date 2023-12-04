@@ -1,4 +1,4 @@
-{% extends 'core/page.html' %}
+{% extends 'core/projects_page.html' %}
 {% load static %}
 {% load i18n %}
 {% load core_tags %}
@@ -19,15 +19,7 @@
     <script src="{% static 'projects/js/projects.js' %}" defer></script>
 {% endblock %}
 
-{% block sidebar %}
-
-    <div id="sidebar"></div>
-
-{% endblock %}
-
 {% block page %}
-
-    <h1>{% trans 'Projects' %}</h1>
 
     <div id="main" class="projects"></div>
 

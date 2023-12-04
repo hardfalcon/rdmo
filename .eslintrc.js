@@ -1,10 +1,11 @@
 module.exports = {
+  'root': true,
   'globals': {
     'gettext': true,
     'ngettext': true,
     'interpolate': true,
     'process': true,
-    'require': true
+    'require': true,
   },
   'env': {
     'browser': true,
