@@ -4,9 +4,10 @@ import Table from 'rdmo/core/assets/js/components/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
 import language from 'rdmo/core/assets/js/utils/language'
 
-const Projects = ({ currentUserObject, projectsObject }) => {
-  const { projects } = projectsObject
+const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
+  const { myProjects, projects } = projectsObject
   const { currentUser } = currentUserObject
+
   // const newHeadline = () => projectsActions.setProjectsHeadline('All projects');
   // projectsActions.setProjectsHeadline('All projects');
   // console.log(newHeadline);
@@ -83,8 +84,8 @@ const Projects = ({ currentUserObject, projectsObject }) => {
 
   // const currentUser = admin;
 
-  console.log('currentUser %o', currentUser)
-  const [viewMyProjects, setViewMyProjects] = useState(true)
+  // console.log('currentUser %o', currentUser)
+  // const [viewMyProjects, setViewMyProjects] = useState(true)
   const [searchString, setSearchString] = useState('')
   const currentUserId = currentUser.id
   const baseUrl = window.location.origin
@@ -92,8 +93,8 @@ const Projects = ({ currentUserObject, projectsObject }) => {
   { hour12: false } :
   { hour12: true }
 
-  const viewLinkText = viewMyProjects ? gettext('View all projects') : gettext('View my projects')
-  const headline = viewMyProjects ? gettext('My projects') : gettext('All projects')
+  const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
+  const headline = myProjects ? gettext('My projects') : gettext('All projects')
 
   const filterBySearch = (projects, searchString) => {
     if (searchString) {
@@ -107,7 +108,7 @@ const Projects = ({ currentUserObject, projectsObject }) => {
   }
 
   const filterByOwner = (projects, id) => {
-    if (currentUser.is_superuser && viewMyProjects) {
+    if (currentUser.is_superuser && myProjects) {
       return projects.filter((project) =>
       project.owners.some((owner) => owner.id === id))
     } else {
@@ -118,7 +119,9 @@ const Projects = ({ currentUserObject, projectsObject }) => {
   const contentData = filterByOwner(projects, currentUserId)
 
   const handleViewClick = () => {
-    setViewMyProjects((prevState) => !prevState)
+    // setViewMyProjects((prevState) => !prevState)
+    // projectsActions.setViewMyProjects(!myProjects)
+    projectsActions.updateConfig('myProjects', !myProjects)
   }
 
   const handleNewClick = () => {
@@ -140,7 +143,13 @@ const Projects = ({ currentUserObject, projectsObject }) => {
     minute: 'numeric'
   }
 
-  const visibleColumns = ['title', 'role', 'progress', 'created', 'updated', 'actions']
+  // const visibleColumns = ['title', 'role', 'progress', 'created', 'updated', 'actions']
+  let visibleColumns = ['title', 'progress', 'updated', 'actions']
+  if (myProjects) {
+    visibleColumns.splice(2, 0, 'role')
+} else {
+    visibleColumns.splice(2, 0, 'created')
+}
 
   const headerFormatters = {
     title: () => gettext('Name'),
@@ -166,7 +175,8 @@ const Projects = ({ currentUserObject, projectsObject }) => {
       })
       return foundInArrays.length > 0 ? gettext(foundInArrays.join(', ')) : null
     },
-    progress: (_content, row) => `${Math.round(row.progress * 100)} %`,
+    // progress: (_content, row) => `${Math.round(row.progress * 100)} %`,
+    progress: (content) => {return `${content.count} ${gettext('of')} ${content.total}`},
     created: content => new Date(content).toLocaleString(language, dateOptions),
     updated: content => new Date(content).toLocaleString(language, dateOptions),
     actions: (_content, row) => {
