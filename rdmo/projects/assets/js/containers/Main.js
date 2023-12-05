@@ -8,7 +8,7 @@ import * as userActions from '../actions/userActions'
 import Projects from '../components/main/Projects'
 
 const Main = ({ projectsActions, projects, userActions, currentUser }) => {
-  console.log('currentUser %o', currentUser)
+  // console.log('currentUser %o', currentUser)
     if (!isEmpty(projects)) {
       return <Projects currentUserObject={currentUser} projectsObject={projects} projectsActions={projectsActions} userActions={userActions} />
     }

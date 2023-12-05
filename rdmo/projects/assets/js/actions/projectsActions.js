@@ -3,7 +3,7 @@
 import ProjectsApi from '../api/ProjectsApi'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS }
          from './types'
-const MY_PROJECTS = 'projects/myProjects'
+// const MY_PROJECTS = 'projects/myProjects'
 
 // export function fetchAllProjects() {
 //   return function(dispatch) {
@@ -25,7 +25,7 @@ export function fetchAllProjects() {
         .then(projects => {
           const fetchProgressPromises = projects.map(project =>
             ProjectsApi.fetchProgress(project.id)
-              .then(progress => ({ ...project, progress: progress.ratio }))
+              .then(progress => ({ ...project, progress: {count: progress.count, total: progress.total} }))
           )
 
           return Promise.all(fetchProgressPromises)
@@ -88,6 +88,10 @@ export function fetchProjectsError(error) {
 //   return {type: FETCH_CURRENT_USER_ERROR, error}
 // }
 
-export function setViewMyProjects(myProjects) {
-  return {type: MY_PROJECTS, myProjects}
+// export function setViewMyProjects(myProjects) {
+//   return {type: MY_PROJECTS, myProjects: myProjects}
+// }
+
+export function updateConfig(path, value) {
+  return {type: 'config/updateConfig', path, value}
 }
