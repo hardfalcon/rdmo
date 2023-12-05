@@ -645,7 +645,7 @@ angular.module('project_questions')
         if (question.widget_class === 'autocomplete') {
             if (angular.isArray(question.options)) {
                 question.options_fuse = new Fuse(question.options, {
-                    keys: ['text']
+                    keys: ['text_and_help']
                 });
             }
 
@@ -654,8 +654,8 @@ angular.module('project_questions')
                 angular.forEach(question.options, function(option) {
                     if (value.autocomplete_locked === false && option.id === value.option) {
                         value.autocomplete_locked = true;
-                        value.autocomplete_input = option.text;
-                        value.autocomplete_text = option.text;
+                        value.autocomplete_input = option.text_and_help;
+                        value.autocomplete_text = option.text_and_help;
                     }
                 });
             } else if (value.text) {
@@ -774,7 +774,7 @@ angular.module('project_questions')
                     // loop over options
                     angular.forEach(question.options, function(option) {
                         if (option.has_provider && value.selected === option.id) {
-                            value.text = option.text;
+                            value.text = option.text_and_help;
                             value.external_id = option.id;
                         } else if (value.selected === option.id.toString()) {
                             // get text from additional_input for the selected option
@@ -872,7 +872,7 @@ angular.module('project_questions')
     service.prev = function() {
         service.error = null; // reset error when moving to previous questionset
         if (service.settings.project_questions_autosave) {
-            service.save(false).then(function() {
+            service.save(false, true).then(function() {
                 back = true;
                 service.initView(service.page.prev_page);
             })
@@ -885,7 +885,7 @@ angular.module('project_questions')
     service.next = function() {
         service.error = null; // reset error when moving to next questionset
         if (service.settings.project_questions_autosave) {
-            service.save(false).then(function() {
+            service.save(false, true).then(function() {
                 service.initView(service.page.next_page);
             })
         } else {
@@ -896,7 +896,7 @@ angular.module('project_questions')
     service.jump = function(section, page) {
         service.error = null; // reset error before saving
         if (service.settings.project_questions_autosave) {
-            service.save(false).then(function() {
+            service.save(false, true).then(function() {
                 if (service.error !== null) {
                     // pass, dont jump
                 } else if (angular.isDefined(page)) {
@@ -918,7 +918,7 @@ angular.module('project_questions')
         }
     };
 
-    service.save = function(proceed) {
+    service.save = function(proceed, jump) {
         service.error = null; // reset error
         return service.storeValues().then(function() {
             if (service.error !== null) {
@@ -963,25 +963,25 @@ angular.module('project_questions')
                         detail_id: future.page.section.id,
                         detail_action: 'navigation'
                     }, function(response) {
-                        console.log(response);
                         service.navigation = response
                     });
                 }
 
                 // check if we need to refresh the site
-                angular.forEach([service.page].concat(service.questionsets), function(questionset) {
-                    angular.forEach(questionset.elements, function(element) {
-                        if (element.model == 'questions.question') {
-                            var question = element;
-                            angular.forEach(question.optionsets, function(optionset) {
-                                if (optionset.has_refresh) {
-                                    return service.initView(service.page.id);
-                                }
-                            });
-                        }
+                if (angular.isUndefined(jump) || !jump) {
+                    angular.forEach([service.page].concat(service.questionsets), function(questionset) {
+                        angular.forEach(questionset.elements, function(element) {
+                            if (element.model == 'questions.question') {
+                                var question = element;
+                                angular.forEach(question.optionsets, function(optionset) {
+                                    if (optionset.has_refresh) {
+                                        return service.initView(service.page.id);
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
-
+                }
                 // re-evaluate conditions
                 angular.forEach([service.page].concat(service.questionsets), function(questionset) {
                     angular.forEach(service.valuesets[questionset.id], function(valuesets, set_prefix) {
@@ -1448,7 +1448,7 @@ angular.module('project_questions')
                 }
                 if (angular.isDefined(next)) {
                     next.active = true;
-                    value.autocomplete_input = next.text;
+                    value.autocomplete_input = next.text_and_help;
                 }
             } else if ($event.code == 'Enter' || $event.code == 'NumpadEnter') {
                 if (value.autocomplete_input == '') {
@@ -1481,10 +1481,12 @@ angular.module('project_questions')
         value.autocomplete_locked = true;
 
         if (option === null) {
+            // store the text value (for the free autocomplete)
             value.text = value.autocomplete_input;
             value.selected = '';
             value.autocomplete_text = value.text;
         } else {
+            // store the option
             value.text = '';
             value.selected = option.id.toString();
             value.autocomplete_text = option.text;

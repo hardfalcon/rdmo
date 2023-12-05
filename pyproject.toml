@@ -58,13 +58,18 @@ dependencies = [
   "drf-extensions~=0.7.1",
   "iso8601~=2.0",
   "markdown~=3.4",
+  "packaging~=23.2",
   "pypandoc~=1.11",
+  "requests-toolbelt~=1.0",
   "rules~=3.3",
 ]
 
 [project.optional-dependencies]
 allauth = [
   "django-allauth~=0.57.0",
+]
+shibboleth = [
+  "django-shibboleth-remoteuser@git+https://github.com/rdmorganiser/django-shibboleth-remoteuser@v0.11"
 ]
 ci = [
   "coveralls~=3.3",
@@ -121,6 +126,7 @@ line-length = 120
 select = [
   "B",    # flake8-bugbear
   "C4",   # flake8-comprehensions
+  "DJ",   # flake8-django
   "E",    # pycodestyle
   "F",    # pyflakes
   "I",    # isort
@@ -179,7 +185,7 @@ rest_framework = ["rest_framework"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
 testpaths = ["rdmo"]
-python_files = "test_*[!.txt].py"
+python_files = "test_*.py"
 pythonpath = [".", "testing"]
 addopts = '-p no:randomly -m "not e2e"'
 markers = [
