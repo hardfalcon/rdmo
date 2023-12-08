@@ -3,89 +3,16 @@ import PropTypes from 'prop-types'
 import Table from 'rdmo/core/assets/js/components/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
 import language from 'rdmo/core/assets/js/utils/language'
+import siteId from 'rdmo/core/assets/js/utils/siteId'
+import { isNil } from 'lodash'
 
 const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
   const { myProjects, projects } = projectsObject
   const { currentUser } = currentUserObject
 
-  // const newHeadline = () => projectsActions.setProjectsHeadline('All projects');
-  // projectsActions.setProjectsHeadline('All projects');
-  // console.log(newHeadline);
+  const isManager = (currentUser && currentUser.is_superuser) ||
+                    (currentUser.role && currentUser.role.manager && currentUser.role.manager.some(manager => manager.id === siteId))
 
-  // const admin = {
-  //   "id": 1,
-  //   "groups": [],
-  //   "role": {
-  //     "id": 1,
-  //     "member": [
-  //       {
-  //         "id": 1,
-  //         "name": "example.com",
-  //         "domain": "example.com"
-  //       }
-  //     ],
-  //     "manager": [],
-  //     "editor": [],
-  //     "reviewer": []
-  //   },
-  //   "memberships": [],
-  //   "is_superuser": true,
-  //   "is_staff": true,
-  //   "username": "admin",
-  //   "first_name": "Anna",
-  //   "last_name": "Admin",
-  //   "email": "admin@example.com",
-  //   "last_login": "2023-11-30T16:03:30.093385+01:00",
-  //   "date_joined": "2016-12-16T16:52:16+01:00"
-  // }
-
-  // const guest = {
-  //   "id": 8,
-  //   "groups": [],
-  //   "role": {
-  //     "id": 8,
-  //     "member": [
-  //       {
-  //         "id": 1,
-  //         "name": "example.com",
-  //         "domain": "example.com"
-  //       }
-  //     ],
-  //     "manager": [],
-  //     "editor": [],
-  //     "reviewer": []
-  //   },
-  //   "memberships": [
-  //     {
-  //       "id": 11,
-  //       "project": 3,
-  //       "role": "guest"
-  //     },
-  //     {
-  //       "id": 14,
-  //       "project": 9,
-  //       "role": "guest"
-  //     },
-  //     {
-  //       "id": 4,
-  //       "project": 1,
-  //       "role": "guest"
-  //     }
-  //   ],
-  //   "is_superuser": false,
-  //   "is_staff": false,
-  //   "username": "guest",
-  //   "first_name": "Garry",
-  //   "last_name": "Guest",
-  //   "email": "guest@example.com",
-  //   "last_login": "2023-11-30T19:36:36.129375+01:00",
-  //   "date_joined": "2017-03-01T14:33:48+01:00"
-  // };
-
-  // const currentUser = admin;
-
-  // console.log('currentUser %o', currentUser)
-  // const [viewMyProjects, setViewMyProjects] = useState(true)
   const [searchString, setSearchString] = useState('')
   const currentUserId = currentUser.id
   const baseUrl = window.location.origin
@@ -108,7 +35,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
   }
 
   const filterByOwner = (projects, id) => {
-    if (currentUser.is_superuser && myProjects) {
+    if (isManager && myProjects) {
       return projects.filter((project) =>
       project.owners.some((owner) => owner.id === id))
     } else {
@@ -143,27 +70,76 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
     minute: 'numeric'
   }
 
-  // const visibleColumns = ['title', 'role', 'progress', 'created', 'updated', 'actions']
+  // const renderTitle = (title, row) => {
+  //   console.log('title', title)
+  //   console.log('row', row)
+  //   return <a href={`${baseUrl}/projects/${row.id}`}><b>{title}</b></a>
+  // }
+
+  const renderTitle = (title, row) => {
+    const getParentPath = (parentId, pathArray = []) => {
+      const parent = projects.find(project => project.id === parentId)
+      if (parent) {
+        const { title: parentTitle, parent: grandParentId } = parent
+        pathArray.unshift(parentTitle)
+        // if (grandParentId !== null && grandParentId !== undefined && typeof grandParentId === 'number') {
+        if (!isNil(grandParentId) && typeof grandParentId === 'number') {
+          return getParentPath(grandParentId, pathArray)
+        }
+      }
+      return pathArray
+    }
+
+    let parentPath = ''
+    if (row.parent) {
+      const path = getParentPath(row.parent)
+      parentPath = path.join(' / ')
+    }
+
+    const pathArray = parentPath ? [parentPath, title] : [title]
+    const pathLength = pathArray.length
+
+    return (
+      <a href={`${baseUrl}/projects/${row.id}`}>
+        {pathArray.map((path, index) => {
+          const isLastChild = index === pathLength - 1
+          return (
+            <span key={index}>
+              {isLastChild ? <b>{path}</b> : path}
+              {index !== pathLength - 1 && ' / '}
+            </span>
+          )
+        })}
+      </a>
+    )
+  }
+
+  const sortableColumns = ['created', 'owner', 'role', 'title', 'updated']
+
+  /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   let visibleColumns = ['title', 'progress', 'updated', 'actions']
   if (myProjects) {
     visibleColumns.splice(2, 0, 'role')
-} else {
+  } else {
     visibleColumns.splice(2, 0, 'created')
-}
+    visibleColumns.splice(2, 0, 'owner')
+  }
 
   const headerFormatters = {
-    title: () => gettext('Name'),
-    role: () => gettext('Role'),
-    progress: () => gettext('Progress'),
-    created: () => gettext('Created'),
-    updated: () => gettext('Last changed'),
-    actions: () => null,
+    title: {render: () => gettext('Name')},
+    role: {render: () => gettext('Role'), sortRawContent: false},
+    owner: {render: () =>  gettext('Owner'), sortRawContent: false} ,
+    progress: {render: () => gettext('Progress'), sortRawContent: false},
+    created: {render: () => gettext('Created')},
+    updated: {render: () => gettext('Last changed')},
+    actions: {render: () => null},
   }
 
   const cellFormatters = {
-    title: (content, row) => {
-      return <a href={`${baseUrl}/projects/${row.id}`}><b>{content}</b></a>
-    },
+    // title: (content, row) => {
+    //   return <a href={`${baseUrl}/projects/${row.id}`}><b>{content}</b></a>
+    // },
+    title: (content, row) => renderTitle(content, row),
     role: (_content, row) => {
       const arraysToSearch = ['authors', 'guests', 'managers', 'owners']
       let foundInArrays = []
@@ -175,6 +151,8 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
       })
       return foundInArrays.length > 0 ? gettext(foundInArrays.join(', ')) : null
     },
+    // owner: (_content, row) => row.owners.map(owner => `${owner.last_name}, ${owner.first_name}`).join('; '),
+    owner: (_content, row) => row.owners.map(owner => `${owner.username}`).join('; '),
     // progress: (_content, row) => `${Math.round(row.progress * 100)} %`,
     progress: (content) => {return `${content.count} ${gettext('of')} ${content.total}`},
     created: content => new Date(content).toLocaleString(language, dateOptions),
@@ -250,7 +228,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
           </span>
         </div>
       {/* </div> */}
-      {currentUser.is_superuser &&
+      {isManager &&
       <Link className="element-link" onClick={handleViewClick}>
           {viewLinkText}
       </Link>
@@ -259,6 +237,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
         cellFormatters={cellFormatters}
         data={filteredProjects}
         headerFormatters={headerFormatters}
+        sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
       />
     </>

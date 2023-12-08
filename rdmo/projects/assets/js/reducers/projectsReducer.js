@@ -20,7 +20,7 @@ export default function projectsReducer(state = initialState, action) {
       return {...state, errors: action.error.errors}
     case MY_PROJECTS:
       return {...state, myProjects: action.myProjects}
-    case 'config/updateConfig':
+    case 'projects/updateConfig':
         newState = {...state}
 
         set(newState, action.path, action.value)
