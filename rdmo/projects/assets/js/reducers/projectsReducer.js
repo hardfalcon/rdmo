@@ -25,7 +25,6 @@ export default function projectsReducer(state = initialState, action) {
 
         set(newState, action.path, action.value)
         localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value)
-        console.log('localStorage', localStorage)
 
         return newState
     default:

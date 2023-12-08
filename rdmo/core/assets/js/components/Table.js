@@ -15,9 +15,6 @@ const Table = ({
   const [sortColumn, setSortColumn] = useState(null)
   const [sortOrder, setSortOrder] = useState('asc')
 
-  // console.log('displayedRows', displayedRows)
-  // console.log('sortColumn', sortColumn)
-  // console.log('sortOrder', sortOrder)
   const loadMore = () => {
     setDisplayedRows(prev => prev + rowsToLoad)
   }
@@ -32,23 +29,6 @@ const Table = ({
       }
     }
   }
-
-  // const sortedData = () => {
-  //   if (sortColumn) {
-  //     const sorted = [...data]
-  //     sorted.sort((a, b) => {
-  //       const valueA = a[sortColumn]
-  //       const valueB = b[sortColumn]
-  //       if (sortOrder === 'asc') {
-  //         return valueA.localeCompare ? valueA.localeCompare(valueB) : valueA - valueB
-  //       } else {
-  //         return valueB.localeCompare ? valueB.localeCompare(valueA) : valueB - valueA
-  //       }
-  //     })
-  //     return sorted
-  //   }
-  //   return data
-  // }
 
   const sortedData = () => {
     if (sortColumn) {
@@ -77,37 +57,6 @@ const Table = ({
     }
     return data
   }
-
-  // const renderHeaders = () => {
-  //   return (
-  //     <thead className="thead-dark">
-  //       <tr>
-  //         {visibleColumns.map(column => (
-  //           <th key={column}>{headerFormatters && headerFormatters[column] ? headerFormatters[column](column) : column}</th>
-  //         ))}
-  //       </tr>
-  //     </thead>
-  //   )
-  // }
-
-  // const renderHeaders = () => {
-  //   return (
-  //     <thead className="thead-dark">
-  //       <tr>
-  //         {visibleColumns.map(column => (
-  //           <th key={column} onClick={() => handleHeaderClick(column)}>
-  //             {headerFormatters && headerFormatters[column] ? headerFormatters[column](column) : column}
-  //             {sortColumn === column && (
-  //               <span className="sort-icon">
-  //                 {sortOrder === 'asc' ? <i className="fa fa-sort-asc" /> : <i className="fa fa-sort-desc" />}
-  //               </span>
-  //             )}
-  //           </th>
-  //         ))}
-  //       </tr>
-  //     </thead>
-  //   )
-  // }
 
   const renderHeaders = () => {
     return (
@@ -139,20 +88,6 @@ const Table = ({
     }
     return content
   }
-
-  // const renderRows = () => {
-  //   return (
-  //     <tbody>
-  //       {data.map((row, index) => (
-  //         <tr key={index}>
-  //           {visibleColumns.map(column => (
-  //             <td key={column}>{formatCellContent(row, column, row[column])}</td>
-  //           ))}
-  //         </tr>
-  //       ))}
-  //     </tbody>
-  //   )
-  // }
 
   const renderRows = () => {
     const sortedRows = sortedData().slice(0, displayedRows)

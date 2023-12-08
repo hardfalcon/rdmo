@@ -46,18 +46,14 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
   const contentData = filterByOwner(projects, currentUserId)
 
   const handleViewClick = () => {
-    // setViewMyProjects((prevState) => !prevState)
-    // projectsActions.setViewMyProjects(!myProjects)
     projectsActions.updateConfig('myProjects', !myProjects)
   }
 
   const handleNewClick = () => {
-    // Logic for handling 'New' button click
     console.log('New button clicked')
   }
 
   const handleImportClick = () => {
-    // Logic for handling 'Import' button click
     console.log('Import button clicked')
   }
 
@@ -69,12 +65,6 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
     hour: 'numeric',
     minute: 'numeric'
   }
-
-  // const renderTitle = (title, row) => {
-  //   console.log('title', title)
-  //   console.log('row', row)
-  //   return <a href={`${baseUrl}/projects/${row.id}`}><b>{title}</b></a>
-  // }
 
   const renderTitle = (title, row) => {
     const getParentPath = (parentId, pathArray = []) => {
@@ -118,6 +108,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
 
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   let visibleColumns = ['title', 'progress', 'updated', 'actions']
+
   if (myProjects) {
     visibleColumns.splice(2, 0, 'role')
   } else {
@@ -136,9 +127,6 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
   }
 
   const cellFormatters = {
-    // title: (content, row) => {
-    //   return <a href={`${baseUrl}/projects/${row.id}`}><b>{content}</b></a>
-    // },
     title: (content, row) => renderTitle(content, row),
     role: (_content, row) => {
       const arraysToSearch = ['authors', 'guests', 'managers', 'owners']
@@ -151,9 +139,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
       })
       return foundInArrays.length > 0 ? gettext(foundInArrays.join(', ')) : null
     },
-    // owner: (_content, row) => row.owners.map(owner => `${owner.last_name}, ${owner.first_name}`).join('; '),
     owner: (_content, row) => row.owners.map(owner => `${owner.username}`).join('; '),
-    // progress: (_content, row) => `${Math.round(row.progress * 100)} %`,
     progress: (content) => {return `${content.count} ${gettext('of')} ${content.total}`},
     created: content => new Date(content).toLocaleString(language, dateOptions),
     updated: content => new Date(content).toLocaleString(language, dateOptions),
@@ -180,54 +166,35 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
     }
   }
 
-  // Filter projects based on the search string
-  // const filteredProjects = searchString
-  //   ? projects.filter((project) =>
-  //       project.title.toLowerCase().includes(searchString.toLowerCase())
-  //     )
-  //   : projects;
   const filteredProjects = filterBySearch(contentData, searchString)
 
   return (
     <>
-    <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <h2 className="ml-10 mt-0">{headline}</h2>
-      <div className="icon-container ml-auto">
-        <button className="element-button mr-10" onClick={handleNewClick}>
-          {gettext('New project')}
-        </button>
-        <button className="element-button" onClick={handleImportClick}>
-          {gettext('Import project')}
-        </button>
+      <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 className="ml-10 mt-0">{headline}</h2>
+        <div className="icon-container ml-auto">
+          <button className="element-button mr-10" onClick={handleNewClick}>
+            {gettext('New project')}
+          </button>
+          <button className="element-button" onClick={handleImportClick}>
+            {gettext('Import project')}
+          </button>
+        </div>
       </div>
-    </div>
-        {/* <div className="form-group mb-0">
-      <div className="input-group">
-        <input type="text" className="form-control" placeholder={placeholder}
-               value={ value } onChange={e => onChange(e.target.value)}></input>
+      <div className="input-group mb-20">
+        <input
+          type="text"
+          className="form-control"
+          placeholder={gettext('Search projects')}
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+        />
         <span className="input-group-btn">
-          <button className="btn btn-default" onClick={() => onChange('')}>
+          <button className="btn btn-default" onClick={() => setSearchString('')}>
             <span className="fa fa-times"></span>
           </button>
         </span>
       </div>
-    </div> */}
-      {/* <div className="form-group mb-20"> */}
-        <div className="input-group mb-20">
-          <input
-            type="text"
-            className="form-control"
-            placeholder={gettext('Search projects')}
-            value={searchString}
-            onChange={(e) => setSearchString(e.target.value)}
-          />
-          <span className="input-group-btn">
-            <button className="btn btn-default" onClick={() => setSearchString('')}>
-              <span className="fa fa-times"></span>
-            </button>
-          </span>
-        </div>
-      {/* </div> */}
       {isManager &&
       <Link className="element-link" onClick={handleViewClick}>
           {viewLinkText}
