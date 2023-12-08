@@ -6,24 +6,10 @@ import {
   FETCH_CURRENT_USER_SUCCESS }
   from './types'
 
-
-  // export function fetchConfig() {
-  //   return (dispatch) => Promise.all([
-  //     AccountsApi.fetchCurrentUser()
-  //   ]).then(([currentUser]) => dispatch(fetchConfigSuccess({
-  //     currentUser
-  //   })))
-  // }
-
-  // export function fetchConfigSuccess(config) {
-  //   return {type: 'config/fetchConfigSuccess', config}
-  // }
-
 export function fetchCurrentUser() {
   return function(dispatch) {
     dispatch(fetchCurrentUserInit())
     const action = (dispatch) => AccountsApi.fetchCurrentUser(true)
-    // .then(currentUser => currentUser)
           .then(currentUser => {
             dispatch(fetchCurrentUserSuccess({ currentUser }))})
 

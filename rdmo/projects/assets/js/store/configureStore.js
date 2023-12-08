@@ -51,7 +51,6 @@ export default function configureStore() {
     }
 
   window.addEventListener('load', () => {
-    console.log('event listener')
     updateConfigFromLocalStorage()
     store.dispatch(userActions.fetchCurrentUser())
     store.dispatch(projectsActions.fetchAllProjects())
