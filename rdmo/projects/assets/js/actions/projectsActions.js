@@ -93,5 +93,5 @@ export function fetchProjectsError(error) {
 // }
 
 export function updateConfig(path, value) {
-  return {type: 'config/updateConfig', path, value}
+  return {type: 'projects/updateConfig', path, value}
 }

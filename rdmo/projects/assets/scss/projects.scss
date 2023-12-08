@@ -197,3 +197,14 @@ a.disabled {
       margin-left: 2px;
   }
 }
+
+.table-container {
+  position: relative;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: white; /* Add desired background color */
+}

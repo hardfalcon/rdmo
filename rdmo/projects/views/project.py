@@ -1,3 +1,4 @@
+import hashlib
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -45,6 +46,12 @@ class NewProjectsView(LoginRequiredMixin, CSRFViewMixin, TemplateView):
     # def has_permission(self):
     #     # Use test_rule from rules for permissions check
     #     return test_rule('projects.can_view_all_projects', self.request.user, self.request.site)
+    def render_to_response(self, context, **response_kwargs):
+      storeid = hashlib.sha256(self.request.session.session_key.encode()).hexdigest()
+
+      response = super().render_to_response(context, **response_kwargs)
+      response.set_cookie('storeid', storeid)
+      return response
 
 class ProjectsView(LoginRequiredMixin, FilterView):
     template_name = 'projects/projects.html'
