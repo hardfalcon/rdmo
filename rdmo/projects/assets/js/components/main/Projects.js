@@ -1,20 +1,43 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import Table from 'rdmo/core/assets/js/components/Table'
+import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
+import { TextField } from 'rdmo/core/assets/js/components/SearchAndFilter'
 import language from 'rdmo/core/assets/js/utils/language'
 import siteId from 'rdmo/core/assets/js/utils/siteId'
-import { isNil } from 'lodash'
+import { get, isNil } from 'lodash'
 
-const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
-  const { myProjects, projects } = projectsObject
+const Projects = ({ config, configActions, currentUserObject, projectsObject }) => {
+  const { projects } = projectsObject
   const { currentUser } = currentUserObject
+  const { myProjects } = config
 
+  const currentUserId = currentUser.id
   const isManager = (currentUser && currentUser.is_superuser) ||
                     (currentUser.role && currentUser.role.manager && currentUser.role.manager.some(manager => manager.id === siteId))
 
-  const [searchString, setSearchString] = useState('')
-  const currentUserId = currentUser.id
+  const findCurrentUsersProjects = ()  => {
+    return projects.filter(project => {
+      const propertiesToCheck = ['authors', 'guests', 'managers', 'owners']
+
+      for (let prop of propertiesToCheck) {
+        if (project[prop].some(user => user.id === currentUserId)) {
+          return true
+        }
+      }
+
+      return false
+    })
+  }
+
+  const contentData = (isManager && myProjects)
+                    // ? projects.filter((project) => project.owners.some((owner) => owner.id === currentUserId))
+                    ? findCurrentUsersProjects()
+                    : projects
+
+  const searchString = get(config, 'filter.title', '')
+  const updateSearchString = (value) => configActions.updateConfig('filter.title', value)
+
   const baseUrl = window.location.origin
   const langOptions = language == 'de' ?
   { hour12: false } :
@@ -23,30 +46,19 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
   const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
   const headline = myProjects ? gettext('My projects') : gettext('All projects')
 
-  const filterBySearch = (projects, searchString) => {
+  const filterByTitleSearch = (projects, searchString) => {
     if (searchString) {
       const lowercaseSearch = searchString.toLowerCase()
       return projects.filter((project) =>
-        project.title.toLowerCase().includes(lowercaseSearch)
+        getTitlePath(project.title, project).toLowerCase().includes(lowercaseSearch)
       )
     } else {
       return projects
     }
   }
 
-  const filterByOwner = (projects, id) => {
-    if (isManager && myProjects) {
-      return projects.filter((project) =>
-      project.owners.some((owner) => owner.id === id))
-    } else {
-      return projects
-    }
-  }
-
-  const contentData = filterByOwner(projects, currentUserId)
-
   const handleViewClick = () => {
-    projectsActions.updateConfig('myProjects', !myProjects)
+    configActions.updateConfig('myProjects', !myProjects)
   }
 
   const handleNewClick = () => {
@@ -66,20 +78,19 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
     minute: 'numeric'
   }
 
-  const renderTitle = (title, row) => {
-    const getParentPath = (parentId, pathArray = []) => {
-      const parent = projects.find(project => project.id === parentId)
-      if (parent) {
-        const { title: parentTitle, parent: grandParentId } = parent
-        pathArray.unshift(parentTitle)
-        // if (grandParentId !== null && grandParentId !== undefined && typeof grandParentId === 'number') {
-        if (!isNil(grandParentId) && typeof grandParentId === 'number') {
-          return getParentPath(grandParentId, pathArray)
-        }
+  const getParentPath = (parentId, pathArray = []) => {
+    const parent = contentData.find((project) => project.id === parentId)
+    if (parent) {
+      const { title: parentTitle, parent: grandParentId } = parent
+      pathArray.unshift(parentTitle)
+      if (!isNil(grandParentId) && typeof grandParentId === 'number') {
+        return getParentPath(grandParentId, pathArray)
       }
-      return pathArray
     }
+    return pathArray
+  }
 
+  const getTitlePath = (title, row) => {
     let parentPath = ''
     if (row.parent) {
       const path = getParentPath(row.parent)
@@ -87,19 +98,19 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
     }
 
     const pathArray = parentPath ? [parentPath, title] : [title]
-    const pathLength = pathArray.length
+    return pathArray.join(' / ')
+  }
+
+  const renderTitle = (title, row) => {
+    const pathArray = getTitlePath(title, row).split(' / ')
+    const lastChild = pathArray.pop()
 
     return (
       <a href={`${baseUrl}/projects/${row.id}`}>
-        {pathArray.map((path, index) => {
-          const isLastChild = index === pathLength - 1
-          return (
-            <span key={index}>
-              {isLastChild ? <b>{path}</b> : path}
-              {index !== pathLength - 1 && ' / '}
-            </span>
-          )
-        })}
+        {pathArray.map((path, index) => (
+          <span key={index}>{path} / </span>
+        ))}
+        <b>{lastChild}</b>
       </a>
     )
   }
@@ -108,12 +119,15 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
 
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   let visibleColumns = ['title', 'progress', 'updated', 'actions']
+  let columnWidths
 
   if (myProjects) {
     visibleColumns.splice(2, 0, 'role')
+    columnWidths = ['25%', '20%', '20%', '20%', '5%']
   } else {
     visibleColumns.splice(2, 0, 'created')
     visibleColumns.splice(2, 0, 'owner')
+    columnWidths = ['25%', '10%', '20%', '20%', '20%', '5%']
   }
 
   const headerFormatters = {
@@ -139,7 +153,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
       })
       return foundInArrays.length > 0 ? gettext(foundInArrays.join(', ')) : null
     },
-    owner: (_content, row) => row.owners.map(owner => `${owner.username}`).join('; '),
+    owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
     progress: (content) => {return `${content.count} ${gettext('of')} ${content.total}`},
     created: content => new Date(content).toLocaleString(language, dateOptions),
     updated: content => new Date(content).toLocaleString(language, dateOptions),
@@ -166,7 +180,7 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
     }
   }
 
-  const filteredProjects = filterBySearch(contentData, searchString)
+  const filteredProjects = filterByTitleSearch(contentData, searchString)
 
   return (
     <>
@@ -181,7 +195,23 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
           </button>
         </div>
       </div>
-      <div className="input-group mb-20">
+      {/* {isManager &&
+      <div className="mb-10">
+        <Link className="element-link mb-20" onClick={handleViewClick}>
+            {viewLinkText}
+        </Link>
+      </div>
+      } */}
+            <span>{filteredProjects.length} {gettext('projects found')}</span>
+      {/* <div className="input-group mb-20"></div> */}
+      <div className="panel-body">
+        <div className="row">
+          <TextField value={searchString} onChange={updateSearchString}
+                        placeholder={gettext('Search projects')} />
+        </div>
+
+      </div>
+      {/* <div className="input-group mb-20">
         <input
           type="text"
           className="form-control"
@@ -194,28 +224,35 @@ const Projects = ({ currentUserObject, projectsObject, projectsActions }) => {
             <span className="fa fa-times"></span>
           </button>
         </span>
-      </div>
+      </div> */}
       {isManager &&
-      <Link className="element-link" onClick={handleViewClick}>
-          {viewLinkText}
-      </Link>
+      <div className="mb-10">
+        <Link className="element-link mb-20" onClick={handleViewClick}>
+            {viewLinkText}
+        </Link>
+      </div>
       }
       <Table
         cellFormatters={cellFormatters}
+        columnWidths={columnWidths}
         data={filteredProjects}
         headerFormatters={headerFormatters}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
+        configActions={configActions}
+        config={config}
       />
     </>
   )
 }
 
 Projects.propTypes = {
+  config: PropTypes.object.isRequired,
+  configActions: PropTypes.object.isRequired,
   currentUserObject: PropTypes.object.isRequired,
-  projectsActions: PropTypes.object.isRequired,
+  // projectsActions: PropTypes.object.isRequired,
   projectsObject: PropTypes.object.isRequired,
-  userActions: PropTypes.object.isRequired,
+  // userActions: PropTypes.object.isRequired,
 }
 
 export default Projects

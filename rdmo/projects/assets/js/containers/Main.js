@@ -3,14 +3,17 @@ import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
+import * as configActions from '../actions/configActions'
 import * as projectsActions from '../actions/projectsActions'
 import * as userActions from '../actions/userActions'
 import Projects from '../components/main/Projects'
 
-const Main = ({ projectsActions, projects, userActions, currentUser }) => {
-    if (!isEmpty(projects)) {
+const Main = ({ config, configActions, projectsActions, projects, userActions, currentUser }) => {
+  if (!isEmpty(projects)) {
       return (
       <Projects
+        config={config}
+        configActions={configActions}
         currentUserObject={currentUser}
         projectsActions={projectsActions}
         projectsObject={projects}
@@ -22,6 +25,8 @@ const Main = ({ projectsActions, projects, userActions, currentUser }) => {
 }
 
 Main.propTypes = {
+  config: PropTypes.object.isRequired,
+  configActions: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   projectsActions: PropTypes.object.isRequired,
   projects: PropTypes.object.isRequired,
@@ -30,6 +35,7 @@ Main.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    config: state.config,
     currentUser: state.currentUser,
     projects: state.projects,
   }
@@ -37,6 +43,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    configActions: bindActionCreators(configActions, dispatch),
     projectsActions: bindActionCreators(projectsActions, dispatch),
     userActions: bindActionCreators(userActions, dispatch),
   }
