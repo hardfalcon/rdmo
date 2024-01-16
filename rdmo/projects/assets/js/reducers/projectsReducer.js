@@ -1,7 +1,7 @@
-import set from 'lodash/set'
+// import set from 'lodash/set'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS } from '../actions/types'
 
-const MY_PROJECTS = 'projects/myProjects'
+// const MY_PROJECTS = 'projects/myProjects'
 
 const initialState = {
   projects: [],
@@ -9,7 +9,7 @@ const initialState = {
 }
 
 export default function projectsReducer(state = initialState, action) {
-  let newState
+  // let newState
   switch(action.type) {
     // fetch elements
     case FETCH_PROJECTS_INIT:
@@ -18,15 +18,15 @@ export default function projectsReducer(state = initialState, action) {
       return {...state, ...action.projects}
     case FETCH_PROJECTS_ERROR:
       return {...state, errors: action.error.errors}
-    case MY_PROJECTS:
-      return {...state, myProjects: action.myProjects}
-    case 'projects/updateConfig':
-        newState = {...state}
+    // case MY_PROJECTS:
+    //   return {...state, myProjects: action.myProjects}
+    // case 'projects/updateConfig':
+    //     newState = {...state}
 
-        set(newState, action.path, action.value)
-        localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value)
+    //     set(newState, action.path, action.value)
+    //     localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value)
 
-        return newState
+    //     return newState
     default:
        return state
   }

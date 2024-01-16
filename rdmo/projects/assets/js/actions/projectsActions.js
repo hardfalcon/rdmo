@@ -2,7 +2,6 @@
 import ProjectsApi from '../api/ProjectsApi'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS }
          from './types'
-// const MY_PROJECTS = 'projects/myProjects'
 
 // export function fetchAllProjects() {
 //   return function(dispatch) {
@@ -50,6 +49,6 @@ export function fetchProjectsError(error) {
   return {type: FETCH_PROJECTS_ERROR, error}
 }
 
-export function updateConfig(path, value) {
-  return {type: 'projects/updateConfig', path, value}
-}
+// export function updateConfig(path, value) {
+//   return {type: 'projects/updateConfig', path, value}
+// }

@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
+import configReducer from './configReducer'
 import projectsReducer from './projectsReducer'
 import userReducer from './userReducer'
-// import menubarReducer from './menubarReducer'
 
 const rootReducer = combineReducers({
+  config: configReducer,
   currentUser: userReducer,
   projects: projectsReducer,
-  // headline: menubarReducer,
 })
 
 export default rootReducer

@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import rootReducer from '../reducers/rootReducer'
 import * as userActions from '../actions/userActions'
 import * as projectsActions from '../actions/projectsActions'
+import * as configActions from '../actions/configActions'
 
 export default function configureStore() {
   const middlewares = [thunk]
@@ -45,7 +46,7 @@ export default function configureStore() {
             default:
               value = lsValue
           }
-          store.dispatch(projectsActions.updateConfig(path, value))
+          store.dispatch(configActions.updateConfig(path, value))
         }
       })
     }
@@ -54,7 +55,6 @@ export default function configureStore() {
     updateConfigFromLocalStorage()
     store.dispatch(userActions.fetchCurrentUser())
     store.dispatch(projectsActions.fetchAllProjects())
-    // store.dispatch(projectsActions.setViewMyProjects(false))
   })
 
   return store
