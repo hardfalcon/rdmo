@@ -16,14 +16,23 @@ const Table = ({
   config
 }) => {
 
-  const displayedRows = get(config, 'table.rows', 0)
+  const displayedRows = get(config, 'table.rows')
+  console.log('displayedRows at beginning', displayedRows)
   displayedRows == 0 && configActions.updateConfig('table.rows', initialRows)
   const { column: sortColumn, order: sortOrder } = get(config, 'table.sort', '')
   // const sortColumn = get(config, 'table.sort.column', '')
   // const sortOrder = get(config, 'table.sort.order', '')
 console.log('sortColumn', sortColumn)
   const loadMore = () => {
+    console.log('Load More')
     configActions.updateConfig('table.rows', parseInt(displayedRows) + parseInt(rowsToLoad))
+    console.log('AFTER load more table.rows', get(config, 'table.rows'))
+  }
+
+  const loadAll = () => {
+    console.log('Load All')
+    configActions.updateConfig('table.rows', parseInt(data.length))
+    console.log('AFTER load all table.rows', get(config, 'table.rows', 0))
   }
 
   const handleHeaderClick = column=> {
@@ -133,9 +142,13 @@ console.log('sortColumn', sortColumn)
         {renderRows()}
       </table>
       {displayedRows < data.length && (
-        <button onClick={loadMore} className="load-more-btn">
-          {gettext('Load More')}
-        </button>
+        <div className="icon-container ml-auto">
+          <button onClick={loadMore} className="load-more-btn">
+            {gettext('Load More')}
+          </button><button onClick={loadAll} className="load-more-btn">
+            {gettext('Load All')}
+          </button>
+        </div>
       )}
     </div>
   )
