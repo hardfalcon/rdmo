@@ -1,4 +1,5 @@
 import React from 'react'
+// import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
@@ -8,10 +9,13 @@ import siteId from 'rdmo/core/assets/js/utils/siteId'
 import { get, isNil } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsObject }) => {
+  // const history = useHistory()
+
   const { projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
+  const displayedRows = get(config, 'table.rows', 0)
   const currentUserId = currentUser.id
   const isManager = (currentUser && currentUser.is_superuser) ||
                     (currentUser.role && currentUser.role.manager && currentUser.role.manager.some(manager => manager.id === siteId))
@@ -63,6 +67,9 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
 
   const handleNewClick = () => {
     console.log('New button clicked')
+    // http://localhost:8000/projects/create/
+    // history.push(`${baseUrl}/projects/create`)
+    window.location.href = `${baseUrl}/projects/create`
   }
 
   const handleImportClick = () => {
@@ -202,7 +209,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
         </Link>
       </div>
       } */}
-            <span>{filteredProjects.length} {gettext('projects found')}</span>
+      <span>{displayedRows>filteredProjects.length ? filteredProjects.length : displayedRows} {gettext('of')} {filteredProjects.length} {gettext('projects are displayed')}</span>
       {/* <div className="input-group mb-20"></div> */}
       <div className="panel-body">
         <div className="row">
