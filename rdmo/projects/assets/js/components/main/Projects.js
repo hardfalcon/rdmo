@@ -15,7 +15,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
-  const displayedRows = get(config, 'table.rows', 0)
+  const displayedRows = get(config, 'table.rows')
   const currentUserId = currentUser.id
   const isManager = (currentUser && currentUser.is_superuser) ||
                     (currentUser.role && currentUser.role.manager && currentUser.role.manager.some(manager => manager.id === siteId))

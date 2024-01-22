@@ -17,8 +17,7 @@ const Table = ({
 }) => {
 
   const displayedRows = get(config, 'table.rows')
-  console.log('displayedRows at beginning', displayedRows)
-  displayedRows == 0 && configActions.updateConfig('table.rows', initialRows)
+  displayedRows === null && configActions.updateConfig('table.rows', initialRows)
   const { column: sortColumn, order: sortOrder } = get(config, 'table.sort', '')
   // const sortColumn = get(config, 'table.sort.column', '')
   // const sortOrder = get(config, 'table.sort.order', '')
