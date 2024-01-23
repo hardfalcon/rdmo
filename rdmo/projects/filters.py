@@ -1,4 +1,6 @@
 from django.db.models import Q
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import is_aware, make_aware
 
 from rest_framework.filters import BaseFilterBackend
 
@@ -35,6 +37,34 @@ class ProjectSearchFilterBackend(BaseFilterBackend):
             )
 
         return queryset
+
+
+class ProjectDateFilterBackend(BaseFilterBackend):
+
+    def filter_queryset(self, request, queryset, view):
+        if view.detail:
+            return queryset
+
+        before = self.parse_query_datetime(request, 'before')
+        if before:
+            queryset = queryset.filter(updated__lte=before)
+
+        after = self.parse_query_datetime(request, 'after')
+        if after:
+            queryset = queryset.filter(updated__gte=after)
+
+        return queryset
+
+    def parse_query_datetime(self, request, key):
+        value = request.GET.get(key)
+        if value:
+            datetime = parse_datetime(value)
+
+            if not is_aware(datetime):
+                datetime = make_aware(datetime)
+
+            return datetime
+
 
 
 class SnapshotFilterBackend(BaseFilterBackend):
