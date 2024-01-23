@@ -23,7 +23,7 @@ from rdmo.questions.models import Page, Question, QuestionSet
 from rdmo.tasks.models import Task
 from rdmo.views.models import View
 
-from .filters import SnapshotFilterBackend, ValueFilterBackend
+from .filters import ProjectSearchFilterBackend, SnapshotFilterBackend, ValueFilterBackend
 from .models import Continuation, Integration, Invite, Issue, Membership, Project, Snapshot, Value
 from .permissions import (
     HasProjectPagePermission,
@@ -59,7 +59,10 @@ class ProjectViewSet(ModelViewSet):
     permission_classes = (HasModelPermission | HasProjectsPermission, )
     serializer_class = ProjectSerializer
 
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (
+        ProjectSearchFilterBackend,
+        DjangoFilterBackend
+    )
     filterset_fields = (
         'title',
         'user',

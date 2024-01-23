@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework.filters import BaseFilterBackend
 
 from django_filters import CharFilter, FilterSet
@@ -11,6 +13,28 @@ class ProjectFilter(FilterSet):
     class Meta:
         model = Project
         fields = ('title', 'catalog')
+
+
+class ProjectSearchFilterBackend(BaseFilterBackend):
+
+    def filter_queryset(self, request, queryset, view):
+        if view.detail:
+            return queryset
+
+        search = request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) | (
+                    Q(memberships__role='owner') & (
+                        Q(memberships__user__username__icontains=search) |
+                        Q(memberships__user__first_name__icontains=search) |
+                        Q(memberships__user__last_name__icontains=search) |
+                        Q(memberships__user__email__icontains=search)
+                    )
+                )
+            )
+
+        return queryset
 
 
 class SnapshotFilterBackend(BaseFilterBackend):
