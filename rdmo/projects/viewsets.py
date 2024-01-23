@@ -23,7 +23,13 @@ from rdmo.questions.models import Page, Question, QuestionSet
 from rdmo.tasks.models import Task
 from rdmo.views.models import View
 
-from .filters import ProjectDateFilterBackend, ProjectSearchFilterBackend, SnapshotFilterBackend, ValueFilterBackend
+from .filters import (
+    ProjectDateFilterBackend,
+    ProjectOrderingFilter,
+    ProjectSearchFilterBackend,
+    SnapshotFilterBackend,
+    ValueFilterBackend,
+)
 from .models import Continuation, Integration, Invite, Issue, Membership, Project, Snapshot, Value
 from .permissions import (
     HasProjectPagePermission,
@@ -60,9 +66,10 @@ class ProjectViewSet(ModelViewSet):
     serializer_class = ProjectSerializer
 
     filter_backends = (
+        DjangoFilterBackend,
         ProjectDateFilterBackend,
+        ProjectOrderingFilter,
         ProjectSearchFilterBackend,
-        DjangoFilterBackend
     )
     filterset_fields = (
         'title',
@@ -71,9 +78,17 @@ class ProjectViewSet(ModelViewSet):
         'catalog',
         'catalog__uri'
     )
+    ordering_fields = (
+        'title',
+        'progress',
+        'role',
+        'owner',
+        'updated',
+        'created'
+    )
 
     def get_queryset(self):
-        return Project.objects.filter_user(self.request.user).select_related('catalog')
+        return Project.objects.filter_user(self.request.user).distinct().select_related('catalog')
 
     @action(detail=True, permission_classes=(HasModelPermission | HasProjectPermission, ))
     def overview(self, request, pk=None):

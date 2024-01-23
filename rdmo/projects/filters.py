@@ -1,12 +1,13 @@
-from django.db.models import Q
+from django.db.models import F, OuterRef, Q, Subquery
+from django.db.models.functions import Concat
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
 
-from rest_framework.filters import BaseFilterBackend
+from rest_framework.filters import BaseFilterBackend, OrderingFilter, SearchFilter
 
 from django_filters import CharFilter, FilterSet
 
-from .models import Project
+from .models import Membership, Project
 
 
 class ProjectFilter(FilterSet):
@@ -17,24 +18,25 @@ class ProjectFilter(FilterSet):
         fields = ('title', 'catalog')
 
 
-class ProjectSearchFilterBackend(BaseFilterBackend):
+class ProjectSearchFilterBackend(SearchFilter):
 
     def filter_queryset(self, request, queryset, view):
         if view.detail:
             return queryset
 
-        search = request.GET.get('search')
-        if search:
-            queryset = queryset.filter(
-                Q(title__icontains=search) | (
-                    Q(memberships__role='owner') & (
-                        Q(memberships__user__username__icontains=search) |
-                        Q(memberships__user__first_name__icontains=search) |
-                        Q(memberships__user__last_name__icontains=search) |
-                        Q(memberships__user__email__icontains=search)
+        search_terms = self.get_search_terms(request)
+        if search_terms:
+            for search_term in search_terms:
+                queryset = queryset.filter(
+                    Q(title__icontains=search_term) | (
+                        Q(memberships__role='owner') & (
+                            Q(memberships__user__username__icontains=search_term) |
+                            Q(memberships__user__first_name__icontains=search_term) |
+                            Q(memberships__user__last_name__icontains=search_term) |
+                            Q(memberships__user__email__icontains=search_term)
+                        )
                     )
                 )
-            )
 
         return queryset
 
@@ -66,6 +68,37 @@ class ProjectDateFilterBackend(BaseFilterBackend):
             return datetime
 
 
+class ProjectOrderingFilter(OrderingFilter):
+
+    def filter_queryset(self, request, queryset, view):
+        if view.detail:
+            return queryset
+
+        ordering = self.get_ordering(request, queryset, view)
+        if ordering:
+            if 'owner' in ordering or '-owner' in ordering:
+                # annotate with the first owner, ordered by last_name, first_name
+                owner_subquery = Subquery(
+                    Membership.objects.filter(project=OuterRef('pk'), role='owner') \
+                                      .annotate(owner=Concat(F('user__last_name'), F('user__first_name'))) \
+                                      .order_by('owner') \
+                                      [:1].values('owner')
+                )
+                queryset = queryset.annotate(owner=owner_subquery)
+            elif 'progress' in ordering or '-progress' in ordering:
+                # annotate with the progress ratio
+                queryset = queryset.annotate(progress=(F('progress_count') + F('progress_total')))
+            if 'role' in ordering or '-role' in ordering:
+                # annotate with the progress ratio
+                role_subquery = Subquery(
+                    Membership.objects.filter(project=OuterRef('pk'), user=request.user).values('role')
+                )
+                queryset = queryset.annotate(role=role_subquery)
+
+            # order the queryset
+            queryset = queryset.order_by(*ordering)
+
+        return queryset
 
 class SnapshotFilterBackend(BaseFilterBackend):
 
