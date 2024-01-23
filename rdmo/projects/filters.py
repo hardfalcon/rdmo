@@ -100,6 +100,7 @@ class ProjectOrderingFilter(OrderingFilter):
 
         return queryset
 
+
 class SnapshotFilterBackend(BaseFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
