@@ -7,8 +7,9 @@ const Table = ({
   columnWidths,
   data,
   headerFormatters,
-  initialRows = 3,
-  rowsToLoad = 2,
+  initialRows = 20,
+  refetchProjects,
+  rowsToLoad = 10,
   sortableColumns,
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   visibleColumns,
@@ -16,66 +17,51 @@ const Table = ({
   config
 }) => {
 
-  const displayedRows = get(config, 'table.rows')
-  displayedRows === null && configActions.updateConfig('table.rows', initialRows)
-  const { column: sortColumn, order: sortOrder } = get(config, 'table.sort', '')
-  // const sortColumn = get(config, 'table.sort.column', '')
-  // const sortOrder = get(config, 'table.sort.order', '')
-console.log('sortColumn', sortColumn)
+  const displayedRows = get(config, 'table.rows', '')
+  // console.log('displayedRows %o', displayedRows)
+  if (displayedRows === null || displayedRows === undefined) {
+    configActions.updateConfig('table.rows', initialRows.toString())
+  }
+  // console.log('displayedRows %o', displayedRows)
+
+  const extractSortingParams = (params) => {
+    const { ordering } = params || {}
+
+    if (!ordering) {
+        return { sortOrder: undefined, sortColumn: undefined }
+    }
+
+    const sortOrder = ordering.startsWith('-') ? 'desc' : 'asc'
+    const sortColumn = sortOrder === 'desc' ? ordering.substring(1) : ordering
+
+    return { sortColumn, sortOrder }
+  }
+
+  const params = get(config, 'params', {})
+  const { sortColumn, sortOrder } = extractSortingParams(params)
+
   const loadMore = () => {
     console.log('Load More')
-    configActions.updateConfig('table.rows', parseInt(displayedRows) + parseInt(rowsToLoad))
+    configActions.updateConfig('table.rows', (parseInt(displayedRows) + parseInt(rowsToLoad)))
     console.log('AFTER load more table.rows', get(config, 'table.rows'))
   }
 
   const loadAll = () => {
     console.log('Load All')
-    configActions.updateConfig('table.rows', parseInt(data.length))
-    console.log('AFTER load all table.rows', get(config, 'table.rows', 0))
+    configActions.updateConfig('table.rows', data.length)
+    console.log('AFTER load all table.rows', get(config, 'table.rows'))
   }
 
-  const handleHeaderClick = column=> {
+  const handleHeaderClick = (column) => {
     if (sortableColumns.includes(column)) {
       if (sortColumn === column) {
-        // configActions.updateConfig('table.sort', { column: column, order: sortOrder === 'asc' ? 'desc' : 'asc' })
-        configActions.updateConfig('table.sort.column', column)
-        configActions.updateConfig('table.sort.order', sortOrder === 'asc' ? 'desc' : 'asc')
+        configActions.updateConfig('params.ordering', sortOrder === 'asc' ? `-${column}` : column)
       } else {
-        // configActions.updateConfig('table.sort', { column: column, order: 'asc'})
-        configActions.updateConfig('table.sort.column', column)
-        configActions.updateConfig('table.sort.order', 'asc')
+        configActions.updateConfig('params.ordering', column)
+
       }
+      refetchProjects(params)
     }
-  }
-
-  const sortedData = () => {
-    // const slicedData = data //.slice(0, displayedRows)
-    const sorted = data
-    if (sortColumn) {
-      // const sorted = slicedData
-      console.log('sorted', sorted)
-
-      sorted.sort((a, b) => {
-        let valueA = a[sortColumn]
-        let valueB = b[sortColumn]
-        const sortRawContent = (
-          headerFormatters[sortColumn]?.sortRawContent ?? true
-        )
-
-        if (!sortRawContent) {
-          valueA = formatCellContent(a, sortColumn, a[sortColumn])
-          valueB = formatCellContent(b, sortColumn, b[sortColumn])
-        }
-
-        if (sortOrder === 'asc') {
-          return valueA.localeCompare ? valueA.localeCompare(valueB) : valueA - valueB
-        } else {
-          return valueB.localeCompare ? valueB.localeCompare(valueA) : valueB - valueA
-        }
-      })
-    }
-    // return sorted.slice(0, displayedRows)
-    return sorted
   }
 
   const renderSortIcon = (column) => {
@@ -117,8 +103,7 @@ console.log('sortColumn', sortColumn)
   }
 
   const renderRows = () => {
-    const sortedRows = sortedData().slice(0, displayedRows)
-    // const sortedRows = sortedData()
+    const sortedRows = data.slice(0, displayedRows)
     return (
       <tbody>
         {sortedRows.map((row, index) => (
@@ -159,6 +144,7 @@ Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   headerFormatters: PropTypes.object,
   initialRows: PropTypes.number,
+  refetchProjects: PropTypes.func,
   rowsToLoad: PropTypes.number,
   sortableColumns: PropTypes.arrayOf(PropTypes.string),
   visibleColumns: PropTypes.arrayOf(PropTypes.string),

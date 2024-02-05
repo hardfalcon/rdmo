@@ -4,6 +4,7 @@ import { UPDATE_CONFIG } from '../actions/types'
 const initialState = {
   filter: {},
   myProjects: true,
+  params: {},
   table: {}
 }
 
@@ -12,10 +13,8 @@ export default function configReducer(state = initialState, action) {
   switch(action.type) {
     case UPDATE_CONFIG:
         newState = {...state}
-
         set(newState, action.path, action.value)
         localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value)
-
         return newState
     default:
        return state

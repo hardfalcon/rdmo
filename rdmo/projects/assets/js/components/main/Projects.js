@@ -1,5 +1,4 @@
 import React from 'react'
-// import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
@@ -8,14 +7,16 @@ import language from 'rdmo/core/assets/js/utils/language'
 import siteId from 'rdmo/core/assets/js/utils/siteId'
 import { get, isNil } from 'lodash'
 
-const Projects = ({ config, configActions, currentUserObject, projectsObject }) => {
-  // const history = useHistory()
-
+const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
   const { projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
   const displayedRows = get(config, 'table.rows')
+  // const params = get(config, 'params', {})
+
+  const refetchProjects = (params) => projectsActions.fetchAllProjects(params)
+
   const currentUserId = currentUser.id
   const isManager = (currentUser && currentUser.is_superuser) ||
                     (currentUser.role && currentUser.role.manager && currentUser.role.manager.some(manager => manager.id === siteId))
@@ -35,7 +36,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
   }
 
   const contentData = (isManager && myProjects)
-                    // ? projects.filter((project) => project.owners.some((owner) => owner.id === currentUserId))
                     ? findCurrentUsersProjects()
                     : projects
 
@@ -67,8 +67,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
 
   const handleNewClick = () => {
     console.log('New button clicked')
-    // http://localhost:8000/projects/create/
-    // history.push(`${baseUrl}/projects/create`)
     window.location.href = `${baseUrl}/projects/create`
   }
 
@@ -202,13 +200,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
           </button>
         </div>
       </div>
-      {/* {isManager &&
-      <div className="mb-10">
-        <Link className="element-link mb-20" onClick={handleViewClick}>
-            {viewLinkText}
-        </Link>
-      </div>
-      } */}
       <span>{displayedRows>filteredProjects.length ? filteredProjects.length : displayedRows} {gettext('of')} {filteredProjects.length} {gettext('projects are displayed')}</span>
       {/* <div className="input-group mb-20"></div> */}
       <div className="panel-body">
@@ -218,20 +209,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
         </div>
 
       </div>
-      {/* <div className="input-group mb-20">
-        <input
-          type="text"
-          className="form-control"
-          placeholder={gettext('Search projects')}
-          value={searchString}
-          onChange={(e) => setSearchString(e.target.value)}
-        />
-        <span className="input-group-btn">
-          <button className="btn btn-default" onClick={() => setSearchString('')}>
-            <span className="fa fa-times"></span>
-          </button>
-        </span>
-      </div> */}
       {isManager &&
       <div className="mb-10">
         <Link className="element-link mb-20" onClick={handleViewClick}>
@@ -244,6 +221,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsObject }) 
         columnWidths={columnWidths}
         data={filteredProjects}
         headerFormatters={headerFormatters}
+        refetchProjects={refetchProjects}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
         configActions={configActions}
@@ -257,9 +235,8 @@ Projects.propTypes = {
   config: PropTypes.object.isRequired,
   configActions: PropTypes.object.isRequired,
   currentUserObject: PropTypes.object.isRequired,
-  // projectsActions: PropTypes.object.isRequired,
+  projectsActions: PropTypes.object.isRequired,
   projectsObject: PropTypes.object.isRequired,
-  // userActions: PropTypes.object.isRequired,
 }
 
 export default Projects
