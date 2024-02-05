@@ -6,10 +6,6 @@ class ProjectsApi extends BaseApi {
     return this.get('/api/v1/projects/projects/')
   }
 
-  static fetchProgress(id) {
-    return this.get(`/api/v1/projects/projects/${id}/progress/`)
-  }
-
 }
 
 export default ProjectsApi
