@@ -47,13 +47,21 @@ class ProjectDateFilterBackend(BaseFilterBackend):
         if view.detail:
             return queryset
 
-        before = self.parse_query_datetime(request, 'before')
-        if before:
-            queryset = queryset.filter(updated__lte=before)
+        created_before = self.parse_query_datetime(request, 'created_before')
+        if created_before:
+            queryset = queryset.filter(created__lte=created_before)
 
-        after = self.parse_query_datetime(request, 'after')
-        if after:
-            queryset = queryset.filter(updated__gte=after)
+        created_after = self.parse_query_datetime(request, 'created_after')
+        if created_after:
+            queryset = queryset.filter(created__gte=created_after)
+
+        updated_before = self.parse_query_datetime(request, 'updated_before')
+        if updated_before:
+            queryset = queryset.filter(updated__lte=updated_before)
+
+        updated_after = self.parse_query_datetime(request, 'updated_after')
+        if updated_after:
+            queryset = queryset.filter(updated__gte=updated_after)
 
         return queryset
 
@@ -61,11 +69,11 @@ class ProjectDateFilterBackend(BaseFilterBackend):
         value = request.GET.get(key)
         if value:
             datetime = parse_datetime(value)
-
-            if not is_aware(datetime):
-                datetime = make_aware(datetime)
-
-            return datetime
+            if datetime:
+                if is_aware(datetime):
+                    return datetime
+                else:
+                    return make_aware(datetime)
 
 
 class ProjectOrderingFilter(OrderingFilter):
@@ -85,10 +93,12 @@ class ProjectOrderingFilter(OrderingFilter):
                                       [:1].values('owner')
                 )
                 queryset = queryset.annotate(owner=owner_subquery)
+
             elif 'progress' in ordering or '-progress' in ordering:
                 # annotate with the progress ratio
                 queryset = queryset.annotate(progress=(F('progress_count') + F('progress_total')))
-            if 'role' in ordering or '-role' in ordering:
+
+            elif 'role' in ordering or '-role' in ordering:
                 # annotate with the progress ratio
                 role_subquery = Subquery(
                     Membership.objects.filter(project=OuterRef('pk'), user=request.user).values('role')
