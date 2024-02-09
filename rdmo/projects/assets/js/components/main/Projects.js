@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
 import { SearchField } from 'rdmo/core/assets/js/components/SearchAndFilter'
+import FileUploadButton from 'rdmo/core/assets/js/components/FileUploadButton'
 import language from 'rdmo/core/assets/js/utils/language'
 import userIsManager from '../helper/userIsManager'
 import { get, isNil } from 'lodash'
@@ -165,9 +166,14 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           <button className="btn btn-link mr-10" onClick={handleNewClick}>
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
-          <button className="btn btn-link" onClick={handleImportClick}>
-          <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
-          </button>
+          <FileUploadButton
+           acceptedTypes="application/xml"
+           buttonText={gettext('Import project')}
+           onFileDrop={handleImportClick}
+          />
+          {/* <button className="btn btn-link" onClick={handleImportClick}>
+           <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
+          </button> */}
         </div>
       </div>
       <span>{displayedRows>projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
