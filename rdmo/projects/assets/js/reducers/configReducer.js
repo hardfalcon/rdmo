@@ -1,11 +1,9 @@
-import set from 'lodash/set'
-import { UPDATE_CONFIG } from '../actions/types'
+import { set, unset } from 'lodash'
+import { DELETE_CONFIG, UPDATE_CONFIG } from '../actions/types'
 
 const initialState = {
-  filter: {},
   myProjects: true,
   params: {},
-  table: {}
 }
 
 export default function configReducer(state = initialState, action) {
@@ -16,6 +14,11 @@ export default function configReducer(state = initialState, action) {
         set(newState, action.path, action.value)
         localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value)
         return newState
+    case DELETE_CONFIG:
+      newState = {...state}
+      unset(newState, action.path)
+      localStorage.removeItem(`rdmo.projects.config.${action.path}`)
+      return newState
     default:
        return state
   }

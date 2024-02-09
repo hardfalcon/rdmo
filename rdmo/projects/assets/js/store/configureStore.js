@@ -6,6 +6,7 @@ import rootReducer from '../reducers/rootReducer'
 import * as userActions from '../actions/userActions'
 import * as projectsActions from '../actions/projectsActions'
 import * as configActions from '../actions/configActions'
+import userIsManager from '../components/helper/userIsManager'
 
 export default function configureStore() {
   const middlewares = [thunk]
@@ -54,7 +55,14 @@ export default function configureStore() {
   window.addEventListener('load', () => {
     updateConfigFromLocalStorage()
     store.dispatch(userActions.fetchCurrentUser())
-    store.dispatch(projectsActions.fetchAllProjects(store.getState().config.params))
+    .then(() => {
+      const currentUser = store.getState().currentUser.currentUser
+      const isManager = userIsManager(currentUser)
+      if (isManager && store.getState().config.myProjects) {
+        store.dispatch(configActions.updateConfig('params.user', currentUser.id))
+      }
+      store.dispatch(projectsActions.fetchAllProjects())
+    })
   })
 
   return store

@@ -1,4 +1,3 @@
-
 import AccountsApi from '../api/AccountsApi'
 import {
   FETCH_CURRENT_USER_ERROR,

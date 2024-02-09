@@ -1,10 +1,10 @@
-
 import ProjectsApi from '../api/ProjectsApi'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS }
          from './types'
 
-export function fetchAllProjects(params) {
-  return function(dispatch) {
+export function fetchAllProjects() {
+  return function(dispatch, getState) {
+    const params = getState().config.params
     dispatch(fetchProjectsInit())
     const action = (dispatch) => ProjectsApi.fetchProjects(params || {})
           .then(projects => {

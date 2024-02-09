@@ -5,24 +5,23 @@ import { get } from 'lodash'
 const Table = ({
   cellFormatters,
   columnWidths,
+  config,
+  configActions,
   data,
   headerFormatters,
   initialRows = 20,
-  refetchProjects,
+  projectsActions,
   rowsToLoad = 10,
   sortableColumns,
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   visibleColumns,
-  configActions,
-  config
 }) => {
-
-  const displayedRows = get(config, 'table.rows', '')
+  const displayedRows = get(config, 'table.rows')
   // console.log('displayedRows %o', displayedRows)
   if (displayedRows === null || displayedRows === undefined) {
     configActions.updateConfig('table.rows', initialRows.toString())
   }
-  // console.log('displayedRows %o', displayedRows)
+  console.log('displayedRows %o', displayedRows)
 
   const extractSortingParams = (params) => {
     const { ordering } = params || {}
@@ -41,15 +40,11 @@ const Table = ({
   const { sortColumn, sortOrder } = extractSortingParams(params)
 
   const loadMore = () => {
-    console.log('Load More')
     configActions.updateConfig('table.rows', (parseInt(displayedRows) + parseInt(rowsToLoad)))
-    console.log('AFTER load more table.rows', get(config, 'table.rows'))
   }
 
   const loadAll = () => {
-    console.log('Load All')
     configActions.updateConfig('table.rows', data.length)
-    console.log('AFTER load all table.rows', get(config, 'table.rows'))
   }
 
   const handleHeaderClick = (column) => {
@@ -58,9 +53,8 @@ const Table = ({
         configActions.updateConfig('params.ordering', sortOrder === 'asc' ? `-${column}` : column)
       } else {
         configActions.updateConfig('params.ordering', column)
-
       }
-      refetchProjects(params)
+      projectsActions.fetchAllProjects()
     }
   }
 
@@ -103,7 +97,7 @@ const Table = ({
   }
 
   const renderRows = () => {
-    const sortedRows = data.slice(0, displayedRows)
+    const sortedRows = displayedRows ? data.slice(0, displayedRows) : data
     return (
       <tbody>
         {sortedRows.map((row, index) => (
@@ -125,11 +119,11 @@ const Table = ({
         {renderHeaders()}
         {renderRows()}
       </table>
-      {displayedRows < data.length && (
+      {displayedRows && displayedRows < data.length && (
         <div className="icon-container ml-auto">
-          <button onClick={loadMore} className="load-more-btn">
+          <button onClick={loadMore} className="btn">
             {gettext('Load More')}
-          </button><button onClick={loadAll} className="load-more-btn">
+          </button><button onClick={loadAll} className="btn">
             {gettext('Load All')}
           </button>
         </div>
@@ -141,15 +135,15 @@ const Table = ({
 Table.propTypes = {
   cellFormatters: PropTypes.object,
   columnWidths: PropTypes.arrayOf(PropTypes.string),
+  config: PropTypes.object,
+  configActions: PropTypes.object,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   headerFormatters: PropTypes.object,
   initialRows: PropTypes.number,
-  refetchProjects: PropTypes.func,
+  projectsActions: PropTypes.object,
   rowsToLoad: PropTypes.number,
   sortableColumns: PropTypes.arrayOf(PropTypes.string),
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
-  configActions: PropTypes.object,
-  config: PropTypes.object
 }
 
 export default Table

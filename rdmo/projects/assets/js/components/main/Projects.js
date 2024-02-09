@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
-import { TextField } from 'rdmo/core/assets/js/components/SearchAndFilter'
+import { SearchField } from 'rdmo/core/assets/js/components/SearchAndFilter'
 import language from 'rdmo/core/assets/js/utils/language'
-import siteId from 'rdmo/core/assets/js/utils/siteId'
+import userIsManager from '../helper/userIsManager'
 import { get, isNil } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
@@ -13,36 +13,18 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { myProjects } = config
 
   const displayedRows = get(config, 'table.rows')
-  // const params = get(config, 'params', {})
-
-  const refetchProjects = (params) => projectsActions.fetchAllProjects(params)
 
   const currentUserId = currentUser.id
-  const isManager = (currentUser && currentUser.is_superuser) ||
-                    (currentUser.role && currentUser.role.manager && currentUser.role.manager.some(manager => manager.id === siteId))
+  const isManager = userIsManager(currentUser)
 
-  const findCurrentUsersProjects = ()  => {
-    return projects.filter(project => {
-      const propertiesToCheck = ['authors', 'guests', 'managers', 'owners']
-
-      for (let prop of propertiesToCheck) {
-        if (project[prop].some(user => user.id === currentUserId)) {
-          return true
-        }
-      }
-
-      return false
-    })
+  const searchString = get(config, 'params.search', '')
+  const updateSearchString = (value) => {
+    const normedValue = value.toLowerCase()
+    normedValue ? configActions.updateConfig('params.search', normedValue) : configActions.deleteConfig('params.search')
   }
 
-  const contentData = (isManager && myProjects)
-                    ? findCurrentUsersProjects()
-                    : projects
-
-  const searchString = get(config, 'filter.title', '')
-  const updateSearchString = (value) => configActions.updateConfig('filter.title', value)
-
   const baseUrl = window.location.origin
+
   const langOptions = language == 'de' ?
   { hour12: false } :
   { hour12: true }
@@ -50,23 +32,13 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
   const headline = myProjects ? gettext('My projects') : gettext('All projects')
 
-  const filterByTitleSearch = (projects, searchString) => {
-    if (searchString) {
-      const lowercaseSearch = searchString.toLowerCase()
-      return projects.filter((project) =>
-        getTitlePath(project.title, project).toLowerCase().includes(lowercaseSearch)
-      )
-    } else {
-      return projects
-    }
-  }
-
   const handleViewClick = () => {
     configActions.updateConfig('myProjects', !myProjects)
+    myProjects ? configActions.deleteConfig('params.user') : configActions.updateConfig('params.user', currentUserId)
+    projectsActions.fetchAllProjects()()
   }
 
   const handleNewClick = () => {
-    console.log('New button clicked')
     window.location.href = `${baseUrl}/projects/create`
   }
 
@@ -84,7 +56,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   }
 
   const getParentPath = (parentId, pathArray = []) => {
-    const parent = contentData.find((project) => project.id === parentId)
+    const parent = projects.find((project) => project.id === parentId)
     if (parent) {
       const { title: parentTitle, parent: grandParentId } = parent
       pathArray.unshift(parentTitle)
@@ -120,7 +92,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     )
   }
 
-  const sortableColumns = ['created', 'owner', 'role', 'title', 'updated']
+  const sortableColumns = ['created', 'owner', 'progress', 'role', 'title', 'updated']
 
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   let visibleColumns = ['title', 'progress', 'updated', 'actions']
@@ -137,9 +109,9 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   const headerFormatters = {
     title: {render: () => gettext('Name')},
-    role: {render: () => gettext('Role'), sortRawContent: false},
-    owner: {render: () =>  gettext('Owner'), sortRawContent: false} ,
-    progress: {render: () => gettext('Progress'), sortRawContent: false},
+    role: {render: () => gettext('Role')},
+    owner: {render: () =>  gettext('Owner')} ,
+    progress: {render: () => gettext('Progress')},
     created: {render: () => gettext('Created')},
     updated: {render: () => gettext('Last changed')},
     actions: {render: () => null},
@@ -185,27 +157,30 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     }
   }
 
-  const filteredProjects = filterByTitleSearch(contentData, searchString)
-
   return (
     <>
       <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 className="ml-10 mt-0">{headline}</h2>
         <div className="icon-container ml-auto">
-          <button className="element-button mr-10" onClick={handleNewClick}>
-            {gettext('New project')}
+          <button className="btn btn-link mr-10" onClick={handleNewClick}>
+            <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
-          <button className="element-button" onClick={handleImportClick}>
-            {gettext('Import project')}
+          <button className="btn btn-link" onClick={handleImportClick}>
+          <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
           </button>
         </div>
       </div>
-      <span>{displayedRows>filteredProjects.length ? filteredProjects.length : displayedRows} {gettext('of')} {filteredProjects.length} {gettext('projects are displayed')}</span>
+      <span>{displayedRows>projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
       {/* <div className="input-group mb-20"></div> */}
       <div className="panel-body">
         <div className="row">
-          <TextField value={searchString} onChange={updateSearchString}
-                        placeholder={gettext('Search projects')} />
+          <SearchField
+            value={searchString}
+            onChange={updateSearchString}
+            onSearch={projectsActions.fetchAllProjects}
+            placeholder={gettext('Search projects')}
+            delay={300}
+          />
         </div>
 
       </div>
@@ -219,13 +194,14 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       <Table
         cellFormatters={cellFormatters}
         columnWidths={columnWidths}
-        data={filteredProjects}
+        config={config}
+        configActions={configActions}
+        data={projects}
         headerFormatters={headerFormatters}
-        refetchProjects={refetchProjects}
+        projectsActions={projectsActions}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
-        configActions={configActions}
-        config={config}
+
       />
     </>
   )
