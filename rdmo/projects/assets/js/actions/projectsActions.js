@@ -1,5 +1,6 @@
 import ProjectsApi from '../api/ProjectsApi'
-import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS }
+import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS,
+         UPLOAD_PROJECT_ERROR, UPLOAD_PROJECT_INIT, UPLOAD_PROJECT_SUCCESS }
          from './types'
 
 export function fetchAllProjects() {
@@ -25,4 +26,28 @@ export function fetchProjectsSuccess(projects) {
 
 export function fetchProjectsError(error) {
   return {type: FETCH_PROJECTS_ERROR, error}
+}
+
+export function uploadProject(url, file) {
+  return function(dispatch) {
+    dispatch(uploadProjectInit())
+
+    return ProjectsApi.uploadProject(url, file)
+      .then(project => dispatch(uploadProjectSuccess(project)))
+      .catch(error => {
+        dispatch(uploadProjectError(error))
+      })
+  }
+}
+
+export function uploadProjectInit() {
+  return {type: UPLOAD_PROJECT_INIT}
+}
+
+export function uploadProjectSuccess(project) {
+  return {type: UPLOAD_PROJECT_SUCCESS, project}
+}
+
+export function uploadProjectError(error) {
+  return {type: UPLOAD_PROJECT_ERROR, error}
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
@@ -12,6 +12,14 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
+
+  const [uploadFile, setUploadFile] = useState(null)
+
+  useEffect(() => {
+    if (uploadFile) {
+      handleImport(uploadFile)
+    }
+  }, [uploadFile])
 
   const displayedRows = get(config, 'table.rows')
 
@@ -30,23 +38,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   { hour12: false } :
   { hour12: true }
 
-  const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
-  const headline = myProjects ? gettext('My projects') : gettext('All projects')
-
-  const handleViewClick = () => {
-    configActions.updateConfig('myProjects', !myProjects)
-    myProjects ? configActions.deleteConfig('params.user') : configActions.updateConfig('params.user', currentUserId)
-    projectsActions.fetchAllProjects()()
-  }
-
-  const handleNewClick = () => {
-    window.location.href = `${baseUrl}/projects/create`
-  }
-
-  const handleImportClick = () => {
-    console.log('Import button clicked')
-  }
-
   const dateOptions = {
     ...langOptions,
     day: 'numeric',
@@ -54,6 +45,24 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     year: 'numeric',
     hour: 'numeric',
     minute: 'numeric'
+  }
+
+  const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
+  const headline = myProjects ? gettext('My projects') : gettext('All projects')
+
+  const handleView = () => {
+    configActions.updateConfig('myProjects', !myProjects)
+    myProjects ? configActions.deleteConfig('params.user') : configActions.updateConfig('params.user', currentUserId)
+    projectsActions.fetchAllProjects()()
+  }
+
+  const handleNew= () => {
+    window.location.href = `${baseUrl}/projects/create`
+  }
+
+  const handleImport = (file) => {
+    projectsActions.uploadProject('/projects/import/', file)
+    setUploadFile(null)
   }
 
   const getParentPath = (parentId, pathArray = []) => {
@@ -158,22 +167,22 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     }
   }
 
+  const buttonProps={'className': 'btn btn-link'}
+
   return (
     <>
       <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 className="ml-10 mt-0">{headline}</h2>
         <div className="icon-container ml-auto">
-          <button className="btn btn-link mr-10" onClick={handleNewClick}>
+          <button className="btn btn-link mr-10" onClick={handleNew}>
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
           <FileUploadButton
-           acceptedTypes="application/xml"
+           acceptedTypes={['application/xml', 'text/xml']}
+           buttonProps={buttonProps}
            buttonText={gettext('Import project')}
-           onFileDrop={handleImportClick}
+           setUploadFile={setUploadFile}
           />
-          {/* <button className="btn btn-link" onClick={handleImportClick}>
-           <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
-          </button> */}
         </div>
       </div>
       <span>{displayedRows>projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
@@ -185,14 +194,13 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             onChange={updateSearchString}
             onSearch={projectsActions.fetchAllProjects}
             placeholder={gettext('Search projects')}
-            delay={300}
           />
         </div>
 
       </div>
       {isManager &&
       <div className="mb-10">
-        <Link className="element-link mb-20" onClick={handleViewClick}>
+        <Link className="element-link mb-20" onClick={handleView}>
             {viewLinkText}
         </Link>
       </div>
