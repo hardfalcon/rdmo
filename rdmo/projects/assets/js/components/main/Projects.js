@@ -170,7 +170,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
            acceptedTypes={['application/xml', 'text/xml']}
            buttonProps={buttonProps}
            buttonText={gettext('Import project')}
-           importFile={handleImport}
+           onImportFile={handleImport}
           />
         </div>
       </div>
