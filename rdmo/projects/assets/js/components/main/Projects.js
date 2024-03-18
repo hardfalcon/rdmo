@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
@@ -12,14 +12,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
-
-  const [uploadFile, setUploadFile] = useState(null)
-
-  useEffect(() => {
-    if (uploadFile) {
-      handleImport(uploadFile)
-    }
-  }, [uploadFile])
 
   const displayedRows = get(config, 'table.rows')
 
@@ -56,14 +48,11 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     projectsActions.fetchAllProjects()()
   }
 
-  const handleNew= () => {
+  const handleNew = () => {
     window.location.href = `${baseUrl}/projects/create`
   }
 
-  const handleImport = (file) => {
-    projectsActions.uploadProject('/projects/import/', file)
-    setUploadFile(null)
-  }
+  const handleImport = (file) => projectsActions.uploadProject('/projects/import/', file)
 
   const getParentPath = (parentId, pathArray = []) => {
     const parent = projects.find((project) => project.id === parentId)
@@ -181,7 +170,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
            acceptedTypes={['application/xml', 'text/xml']}
            buttonProps={buttonProps}
            buttonText={gettext('Import project')}
-           setUploadFile={setUploadFile}
+           importFile={handleImport}
           />
         </div>
       </div>
