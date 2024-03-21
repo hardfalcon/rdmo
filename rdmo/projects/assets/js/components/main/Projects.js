@@ -5,7 +5,7 @@ import Link from 'rdmo/core/assets/js/components/Link'
 import { SearchField } from 'rdmo/core/assets/js/components/SearchAndFilter'
 import FileUploadButton from 'rdmo/core/assets/js/components/FileUploadButton'
 import language from 'rdmo/core/assets/js/utils/language'
-import userIsManager from '../helper/userIsManager'
+import userIsManager from '../../utils/userIsManager'
 import { get, isNil } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
@@ -185,7 +185,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             placeholder={gettext('Search projects')}
           />
         </div>
-
       </div>
       {isManager &&
       <div className="mb-10">

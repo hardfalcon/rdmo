@@ -6,7 +6,7 @@ import rootReducer from '../reducers/rootReducer'
 import * as userActions from '../actions/userActions'
 import * as projectsActions from '../actions/projectsActions'
 import * as configActions from '../actions/configActions'
-import userIsManager from '../components/helper/userIsManager'
+import userIsManager from '../utils/userIsManager'
 
 export default function configureStore() {
   const middlewares = [thunk]
