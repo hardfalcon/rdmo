@@ -4,6 +4,7 @@ import { DELETE_CONFIG, UPDATE_CONFIG } from '../actions/types'
 const initialState = {
   myProjects: true,
   params: {},
+  tableRows: '20'
 }
 
 export default function configReducer(state = initialState, action) {
@@ -12,7 +13,7 @@ export default function configReducer(state = initialState, action) {
     case UPDATE_CONFIG:
         newState = {...state}
         set(newState, action.path, action.value)
-        localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value)
+        localStorage.setItem(`rdmo.projects.config.${action.path}`, action.value.toString())
         return newState
     case DELETE_CONFIG:
       newState = {...state}

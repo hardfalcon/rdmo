@@ -13,7 +13,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
-  const displayedRows = get(config, 'table.rows')
+  const displayedRows = get(config, 'tableRows', '')
 
   const currentUserId = currentUser.id
   const isManager = userIsManager(currentUser)
@@ -52,7 +52,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     window.location.href = `${baseUrl}/projects/create`
   }
 
-  const handleImport = (file) => projectsActions.uploadProject('/projects/import/', file)
+  const handleImport = (file) => { projectsActions.uploadProject('/projects/import/', file) }
 
   const getParentPath = (parentId, pathArray = []) => {
     const parent = projects.find((project) => project.id === parentId)
@@ -174,7 +174,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           />
         </div>
       </div>
-      <span>{displayedRows>projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
+      <span>{parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
       {/* <div className="input-group mb-20"></div> */}
       <div className="panel-body">
         <div className="row">
