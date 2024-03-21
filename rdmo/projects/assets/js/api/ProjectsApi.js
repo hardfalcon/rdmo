@@ -15,6 +15,62 @@ class ProjectsApi extends BaseApi {
     })
   }
 
+  // static fetchInvites(userId) {
+  //   return fetch(`/api/v1/projects/invites/?user=${userId}`).then(response => {
+  //     if (response.ok) {
+  //       return response.json()
+  //     } else {
+  //       throw new Error(response.statusText)
+  //     }
+  //   }).then(invites => {
+  //     const projectPromises = invites.map(invite => {
+  //       return fetch(`/api/v1/projects/projects/${invite.project}`).then(response => {
+  //         if (response.ok) {
+  //           return response.json()
+  //         } else {
+  //           throw new Error(response.statusText)
+  //         }
+  //       })
+  //     })
+  //     return Promise.all(projectPromises)
+  //   })
+  // }
+
+  static fetchInvites(userId) {
+    return fetch(`/api/v1/projects/invites/?user=${userId}`)
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw new Error(response.statusText)
+        }
+      })
+      .then(invites => {
+        const projectRequests = invites.map(invite => {
+          return fetch(`/api/v1/projects/projects/${invite.project}/`)
+            .then(response => {
+              if (response.ok) {
+                return response.json()
+              } else {
+                throw new Error(response.statusText)
+              }
+            })
+            .then(project => {
+              invite.project_title = project.title
+              return invite
+            })
+            .catch(error => {
+              throw new Error(`Error fetching project: ${error.message}`)
+            })
+        })
+        return Promise.all(projectRequests)
+      })
+      .catch(error => {
+        throw new Error(`API error: ${error.message}`)
+      })
+  }
+
+
   static uploadProject(url, file) {
     var formData = new FormData()
     formData.append('method', 'upload_file')

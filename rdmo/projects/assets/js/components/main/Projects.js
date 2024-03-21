@@ -1,15 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
+import PendingInvitations from '../helper/PendingInvitations'
 import Link from 'rdmo/core/assets/js/components/Link'
 import { SearchField } from 'rdmo/core/assets/js/components/SearchAndFilter'
 import FileUploadButton from 'rdmo/core/assets/js/components/FileUploadButton'
 import language from 'rdmo/core/assets/js/utils/language'
-import userIsManager from '../helper/userIsManager'
-import { get, isNil } from 'lodash'
+import userIsManager from '../../utils/userIsManager'
+import { get, isNil, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
-  const { projects } = projectsObject
+  const { invites, projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
@@ -158,6 +159,8 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   const buttonProps={'className': 'btn btn-link'}
 
+  console.log('Invites:', invites)
+
   return (
     <>
       <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -174,8 +177,13 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           />
         </div>
       </div>
+      { !isEmpty(invites) && myProjects &&
+        <PendingInvitations
+          dateOptions={dateOptions}
+          invitations={invites}
+        />
+      }
       <span>{displayedRows>projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
-      {/* <div className="input-group mb-20"></div> */}
       <div className="panel-body">
         <div className="row">
           <SearchField
@@ -190,7 +198,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       {isManager &&
       <div className="mb-10">
         <Link className="element-link mb-20" onClick={handleView}>
-            {viewLinkText}
+        {viewLinkText}
         </Link>
       </div>
       }
@@ -204,7 +212,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         projectsActions={projectsActions}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
-
       />
     </>
   )
