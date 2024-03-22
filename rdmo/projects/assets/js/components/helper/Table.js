@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { get, isEmpty } from 'lodash'
+import { get } from 'lodash'
 
-import { INITIAL_TABLE_ROWS, ROWS_TO_LOAD } from '../../constants'
+import { ROWS_TO_LOAD } from '../../constants'
 
 const Table = ({
   cellFormatters,
@@ -19,10 +19,7 @@ const Table = ({
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   visibleColumns,
 }) => {
-  const displayedRows = get(config, 'tableRows', '')
-  if (isEmpty(displayedRows) || displayedRows === null || displayedRows === undefined || displayedRows === 0) {
-    configActions.updateConfig('tableRows', INITIAL_TABLE_ROWS)
-  }
+  const displayedRows = get(config, 'tableRows')
 
   const extractSortingParams = (params) => {
     const { ordering } = params || {}
