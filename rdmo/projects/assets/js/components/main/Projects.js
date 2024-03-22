@@ -183,7 +183,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       </div>
       { !isEmpty(invites) && myProjects &&
         <PendingInvitations
-          dateOptions={dateOptions}
           invitations={invites}
         />
       }

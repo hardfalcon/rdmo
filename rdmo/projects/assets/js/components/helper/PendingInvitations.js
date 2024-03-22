@@ -1,28 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import language from 'rdmo/core/assets/js/utils/language'
 
-const columnStyle = { width: '25%', paddingRight: '10px' }
-const PendingInvitations = ({ dateOptions, invitations }) => {
+const columnStyle = { color: '#666', width: '25%', paddingLeft: '10px' }
+const tableStyle = { border: '1px solid #ccc', borderCollapse: 'collapse', width: '100%' }
+
+const PendingInvitations = ({ invitations }) => {
   const baseUrl = window.location.origin
 
-  // Calculate the maximum length of project_title
-  const maxProjectTitleLength = invitations.reduce((max, item) => Math.max(max, item.project_title.length), 0)
-console.log('maxProjectTitleLength %o', maxProjectTitleLength)
   return (
     <div className="mb-20">
-      <b>{gettext('Pending invitations')}</b>
-      <table>
+      <table style={tableStyle}>
         <tbody>
+        <td style={columnStyle} colSpan="4"><h5>{gettext('Pending invitations')}</h5></td>
           {invitations.map(item => (
             <tr key={item.id}>
               <td style={columnStyle}>
+                <b>{item.project_title}</b>
                 {/* <a href={`${baseUrl}/projects/${item.project}`} target="_blank" rel="noopener noreferrer">{item.project_title}</a>
                 {' '.repeat(maxProjectTitleLength - item.project_title.length)} */}
-                <a href={`${baseUrl}/projects/join/${item.project}`} target="_blank" rel="noopener noreferrer"><b>{item.project_title}</b></a>
+                {/* <a href={`${baseUrl}/projects/join/${item.project}`} target="_blank" rel="noopener noreferrer"><b>{item.project_title}</b></a> */}
               </td>
-              <td style={columnStyle}>{item.role}</td>
-              <td style={columnStyle}>{new Date(item.timestamp).toLocaleString(language, dateOptions)}</td>
+              {/* <td style={columnStyle}>{gettext(item.role)}</td> */}
+              <td style={columnStyle}>{gettext(item.role).charAt(0).toUpperCase() + gettext(item.role).slice(1)}</td>
+              <td style={columnStyle}>
+                <button className="btn btn-link" onClick={() => { window.location.href = `${baseUrl}/projects/join/${item.project}` }}>{gettext('Accept')}</button>
+              </td>
+              <td style={columnStyle}>
+                <button className="btn btn-link" onClick={() => { window.location.href = `${baseUrl}/projects/cancel/${item.project}` }}>{gettext('Decline')}</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -32,13 +37,11 @@ console.log('maxProjectTitleLength %o', maxProjectTitleLength)
 }
 
 PendingInvitations.propTypes = {
-  dateOptions: PropTypes.object.isRequired,
   invitations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     project_title: PropTypes.string.isRequired,
     project: PropTypes.number.isRequired,
     role: PropTypes.string.isRequired,
-    timestamp: PropTypes.string.isRequired,
   })).isRequired,
 }
 
