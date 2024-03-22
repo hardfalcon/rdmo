@@ -115,7 +115,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       return foundInArrays.length > 0 ? gettext(foundInArrays.join(', ')) : null
     },
     owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
-    progress: (_content, row) => {return `${row.progress_count} ${gettext('of')} ${row.progress_total}`},
+    progress: (_content, row) => `${row.progress_count ?? 0} ${gettext('of')} ${row.progress_total ?? 0}`,
     created: content => new Date(content).toLocaleString(language, dateOptions),
     updated: content => new Date(content).toLocaleString(language, dateOptions),
     actions: (_content, row) => {
