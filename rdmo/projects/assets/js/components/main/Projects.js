@@ -6,7 +6,9 @@ import { SearchField } from 'rdmo/core/assets/js/components/SearchAndFilter'
 import FileUploadButton from 'rdmo/core/assets/js/components/FileUploadButton'
 import language from 'rdmo/core/assets/js/utils/language'
 import userIsManager from '../../utils/userIsManager'
-import { get, isNil } from 'lodash'
+import { getTitlePath } from '../../utils/getProjectTitlePath'
+import { DATE_OPTIONS, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../constants'
+import { get } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
   const { projects } = projectsObject
@@ -54,11 +56,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   const dateOptions = {
     ...langOptions,
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
+    DATE_OPTIONS
   }
 
   const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
@@ -76,31 +74,8 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   const handleImport = (file) => { projectsActions.uploadProject('/projects/import/', file) }
 
-  const getParentPath = (parentId, pathArray = []) => {
-    const parent = projects.find((project) => project.id === parentId)
-    if (parent) {
-      const { title: parentTitle, parent: grandParentId } = parent
-      pathArray.unshift(parentTitle)
-      if (!isNil(grandParentId) && typeof grandParentId === 'number') {
-        return getParentPath(grandParentId, pathArray)
-      }
-    }
-    return pathArray
-  }
-
-  const getTitlePath = (title, row) => {
-    let parentPath = ''
-    if (row.parent) {
-      const path = getParentPath(row.parent)
-      parentPath = path.join(' / ')
-    }
-
-    const pathArray = parentPath ? [parentPath, title] : [title]
-    return pathArray.join(' / ')
-  }
-
   const renderTitle = (title, row) => {
-    const pathArray = getTitlePath(title, row).split(' / ')
+    const pathArray = getTitlePath(projects, title, row).split(' / ')
     const lastChild = pathArray.pop()
 
     return (
@@ -113,8 +88,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     )
   }
 
-  const sortableColumns = ['created', 'owner', 'progress', 'role', 'title', 'updated']
-
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
   let visibleColumns = ['title', 'progress', 'updated', 'actions']
   let columnWidths
@@ -126,16 +99,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     visibleColumns.splice(2, 0, 'created')
     visibleColumns.splice(2, 0, 'owner')
     columnWidths = ['25%', '10%', '20%', '20%', '20%', '5%']
-  }
-
-  const headerFormatters = {
-    title: {render: () => gettext('Name')},
-    role: {render: () => gettext('Role')},
-    owner: {render: () =>  gettext('Owner')} ,
-    progress: {render: () => gettext('Progress')},
-    created: {render: () => gettext('Created')},
-    updated: {render: () => gettext('Last changed')},
-    actions: {render: () => null},
   }
 
   const cellFormatters = {
@@ -178,8 +141,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     }
   }
 
-  const buttonProps={'className': 'btn btn-link'}
-
   return (
     <>
       <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -190,14 +151,13 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           </button>
           <FileUploadButton
            acceptedTypes={['application/xml', 'text/xml']}
-           buttonProps={buttonProps}
+           buttonProps={{'className': 'btn btn-link'}}
            buttonText={gettext('Import project')}
            onImportFile={handleImport}
           />
         </div>
       </div>
       <span>{parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
-      {/* <div className="input-group mb-20"></div> */}
       <div className="panel-body">
         <div className="row">
           <SearchField
@@ -221,13 +181,12 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         config={config}
         configActions={configActions}
         data={projects}
-        headerFormatters={headerFormatters}
+        headerFormatters={HEADER_FORMATTERS}
         projectsActions={projectsActions}
         showTopButton={showTopButton}
         scrollToTop={scrollToTop}
-        sortableColumns={sortableColumns}
+        sortableColumns={SORTABLE_COLUMNS}
         visibleColumns={visibleColumns}
-
       />
     </>
   )
