@@ -14,7 +14,15 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
-  const displayedRows = get(config, 'table.rows')
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const scrollToBottom = () => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+  }
+
+  const displayedRows = get(config, 'tableRows', '')
 
   const currentUserId = currentUser.id
   const isManager = userIsManager(currentUser)
@@ -46,14 +54,14 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const handleView = () => {
     configActions.updateConfig('myProjects', !myProjects)
     myProjects ? configActions.deleteConfig('params.user') : configActions.updateConfig('params.user', currentUserId)
-    projectsActions.fetchAllProjects()()
+    projectsActions.fetchAllProjects()
   }
 
   const handleNew = () => {
     window.location.href = `${baseUrl}/projects/create`
   }
 
-  const handleImport = (file) => projectsActions.uploadProject('/projects/import/', file)
+  const handleImport = (file) => { projectsActions.uploadProject('/projects/import/', file) }
 
   const getParentPath = (parentId, pathArray = []) => {
     const parent = projects.find((project) => project.id === parentId)
@@ -183,7 +191,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           invitations={invites}
         />
       }
-      <span>{displayedRows>projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
+      <span>{parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
       <div className="panel-body">
         <div className="row">
           <SearchField
@@ -193,7 +201,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             placeholder={gettext('Search projects')}
           />
         </div>
-
       </div>
       {isManager &&
       <div className="mb-10">
@@ -210,6 +217,8 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         data={projects}
         headerFormatters={headerFormatters}
         projectsActions={projectsActions}
+        scrollToBottom={scrollToBottom}
+        scrollToTop={scrollToTop}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
       />
