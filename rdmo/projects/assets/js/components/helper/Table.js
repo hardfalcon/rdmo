@@ -12,7 +12,6 @@ const Table = ({
   initialRows = '20',
   projectsActions,
   rowsToLoad = '10',
-  scrollToBottom,
   scrollToTop,
   sortableColumns,
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
@@ -47,16 +46,11 @@ const Table = ({
     configActions.updateConfig('tableRows', data.length.toString())
   }
 
-  const renderLoadButtons = (position) => {
+  const renderLoadButtons = () => {
     return (
         displayedRows && (
           <div className="icon-container ml-auto">
-            {position === 'top' && // data.length > 0 &&
-              <button className="btn" onClick={scrollToBottom} title={gettext('Scroll to bottom')}>
-                <i className="fa fa-arrow-down" aria-hidden="true"></i>
-              </button>
-            }
-            {position === 'bottom' && // data.length > 0 &&
+            {data.length > 0 &&
               <button className="btn" onClick={scrollToTop} title={gettext('Scroll to top')}>
                 <i className="fa fa-arrow-up" aria-hidden="true"></i>
               </button>
@@ -145,7 +139,6 @@ const Table = ({
 
   return (
     <div className="table-container">
-      {renderLoadButtons('top')}
       <table className="table table-borderless">
         {renderHeaders()}
         {renderRows()}
@@ -165,7 +158,6 @@ Table.propTypes = {
   initialRows: PropTypes.string,
   projectsActions: PropTypes.object,
   rowsToLoad: PropTypes.string,
-  scrollToBottom: PropTypes.func,
   scrollToTop: PropTypes.func,
   sortableColumns: PropTypes.arrayOf(PropTypes.string),
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
