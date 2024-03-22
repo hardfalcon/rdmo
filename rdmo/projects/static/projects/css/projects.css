@@ -9674,3 +9674,18 @@ a.disabled {
   z-index: 1;
   background-color: white; /* Add desired background color */
 }
+
+.elliptic-button {
+  float: right;
+  padding: 5px 14px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.elliptic-button:hover,
+.elliptic-button:focus {
+  text-decoration: none;
+  background-color: #eeeeee;
+}

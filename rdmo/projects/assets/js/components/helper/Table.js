@@ -50,16 +50,16 @@ const Table = ({
         displayedRows && (
           <div className="icon-container ml-auto">
             {data.length > 0 && showTopButton &&
-              <button className="btn" onClick={scrollToTop} title={gettext('Scroll to top')}>
+              <button className="elliptic-button" onClick={scrollToTop} title={gettext('Scroll to top')}>
                 <i className="fa fa-arrow-up" aria-hidden="true"></i>
               </button>
             }
             {displayedRows < data.length &&
             <>
-            <button onClick={loadMore} className="btn">
+            <button onClick={loadMore} className="elliptic-button">
               {gettext('Load More')}
             </button>
-            <button onClick={loadAll} className="btn">
+            <button onClick={loadAll} className="elliptic-button">
               {gettext('Load All')}
             </button>
             </>
