@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
 import Link from 'rdmo/core/assets/js/components/Link'
@@ -12,6 +12,24 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
+
+  const [showTopButton, setShowTopButton] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.pageYOffset > 100) {
+        setShowTopButton(true)
+      } else {
+        setShowTopButton(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -205,6 +223,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         data={projects}
         headerFormatters={headerFormatters}
         projectsActions={projectsActions}
+        showTopButton={showTopButton}
         scrollToTop={scrollToTop}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}

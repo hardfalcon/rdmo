@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { get, isEmpty } from 'lodash'
 
+import { INITIAL_TABLE_ROWS, ROWS_TO_LOAD } from '../../constants'
+
 const Table = ({
   cellFormatters,
   columnWidths,
@@ -9,9 +11,9 @@ const Table = ({
   configActions,
   data,
   headerFormatters,
-  initialRows = '20',
   projectsActions,
-  rowsToLoad = '10',
+  rowsToLoad = ROWS_TO_LOAD,
+  showTopButton = false,
   scrollToTop,
   sortableColumns,
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
@@ -19,7 +21,7 @@ const Table = ({
 }) => {
   const displayedRows = get(config, 'tableRows', '')
   if (isEmpty(displayedRows) || displayedRows === null || displayedRows === undefined || displayedRows === 0) {
-    configActions.updateConfig('tableRows', initialRows)
+    configActions.updateConfig('tableRows', INITIAL_TABLE_ROWS)
   }
 
   const extractSortingParams = (params) => {
@@ -50,7 +52,7 @@ const Table = ({
     return (
         displayedRows && (
           <div className="icon-container ml-auto">
-            {data.length > 0 &&
+            {data.length > 0 && showTopButton &&
               <button className="btn" onClick={scrollToTop} title={gettext('Scroll to top')}>
                 <i className="fa fa-arrow-up" aria-hidden="true"></i>
               </button>
@@ -143,7 +145,7 @@ const Table = ({
         {renderHeaders()}
         {renderRows()}
       </table>
-      {renderLoadButtons('bottom')}
+      {renderLoadButtons()}
     </div>
   )
 }
@@ -155,9 +157,9 @@ Table.propTypes = {
   configActions: PropTypes.object,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   headerFormatters: PropTypes.object,
-  initialRows: PropTypes.string,
   projectsActions: PropTypes.object,
   rowsToLoad: PropTypes.string,
+  showTopButton: PropTypes.bool,
   scrollToTop: PropTypes.func,
   sortableColumns: PropTypes.arrayOf(PropTypes.string),
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
