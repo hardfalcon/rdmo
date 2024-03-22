@@ -18,10 +18,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const scrollToBottom = () => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
-  }
-
   const displayedRows = get(config, 'tableRows', '')
 
   const currentUserId = currentUser.id
@@ -217,7 +213,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         data={projects}
         headerFormatters={headerFormatters}
         projectsActions={projectsActions}
-        scrollToBottom={scrollToBottom}
         scrollToTop={scrollToTop}
         sortableColumns={sortableColumns}
         visibleColumns={visibleColumns}
