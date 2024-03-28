@@ -1,6 +1,6 @@
 import { set, unset } from 'lodash'
 import { DELETE_CONFIG, UPDATE_CONFIG } from '../actions/types'
-import { INITIAL_TABLE_ROWS } from '../constants'
+import { INITIAL_TABLE_ROWS } from '../utils/constants'
 
 const initialState = {
   myProjects: true,

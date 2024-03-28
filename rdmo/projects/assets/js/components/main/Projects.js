@@ -7,7 +7,7 @@ import FileUploadButton from 'rdmo/core/assets/js/components/FileUploadButton'
 import language from 'rdmo/core/assets/js/utils/language'
 import userIsManager from '../../utils/userIsManager'
 import { getTitlePath } from '../../utils/getProjectTitlePath'
-import { DATE_OPTIONS, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../constants'
+import { DATE_OPTIONS, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils/constants'
 import { get } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
