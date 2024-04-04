@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
-
-import { ROWS_TO_LOAD } from '../../utils/constants'
+import { ROWS_TO_LOAD } from '../../utils'
 
 const Table = ({
   cellFormatters,
