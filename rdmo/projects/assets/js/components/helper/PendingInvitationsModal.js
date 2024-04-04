@@ -44,33 +44,6 @@ const PendingInvitationsModal = ({ invitations, onClose, show }) => {
       </Modal.Footer>
     </Modal>
   )
-  // return (
-  //   <div className="mb-20">
-  //     <table style={tableStyle}>
-  //       <tbody>
-  //       <td style={columnStyle} colSpan="4"><h5>{gettext('Pending invitations')}</h5></td>
-  //         {invitations.map(item => (
-  //           <tr key={item.id}>
-  //             <td style={columnStyle}>
-  //               <b>{item.project_title}</b>
-  //               {/* <a href={`${baseUrl}/projects/${item.project}`} target="_blank" rel="noopener noreferrer">{item.project_title}</a>
-  //               {' '.repeat(maxProjectTitleLength - item.project_title.length)} */}
-  //               {/* <a href={`${baseUrl}/projects/join/${item.project}`} target="_blank" rel="noopener noreferrer"><b>{item.project_title}</b></a> */}
-  //             </td>
-  //             {/* <td style={columnStyle}>{gettext(item.role)}</td> */}
-  //             <td style={columnStyle}>{gettext(item.role).charAt(0).toUpperCase() + gettext(item.role).slice(1)}</td>
-  //             <td style={columnStyle}>
-  //               <button className="btn btn-link" onClick={() => { window.location.href = `${baseUrl}/projects/join/${item.project}` }}>{gettext('Accept')}</button>
-  //             </td>
-  //             <td style={columnStyle}>
-  //               <button className="btn btn-link" onClick={() => { window.location.href = `${baseUrl}/projects/cancel/${item.project}` }}>{gettext('Decline')}</button>
-  //             </td>
-  //           </tr>
-  //         ))}
-  //       </tbody>
-  //     </table>
-  //   </div>
-  // )
 }
 
 PendingInvitationsModal.propTypes = {
