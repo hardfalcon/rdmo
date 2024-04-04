@@ -9,7 +9,7 @@ const PendingInvitationsModal = ({ invitations, onClose, show }) => {
   const baseUrl = window.location.origin
 
   return (
-    <Modal bsSize="large" show={show} onHide={onClose} className="element-modal">
+    <Modal show={show} onHide={onClose} className="element-modal">
       <Modal.Header closeButton>
         <h2 className="modal-title">{gettext('Pending invitations')}</h2>
       </Modal.Header>
