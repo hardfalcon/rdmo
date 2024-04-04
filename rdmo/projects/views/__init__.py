@@ -3,7 +3,7 @@ from .invite import InviteDeleteView
 from .issue import IssueDetailView, IssueSendView, IssueUpdateView
 from .membership import MembershipCreateView, MembershipDeleteView, MembershipUpdateView
 from .project import (
-    NewProjectsView,
+    OldProjectsView,
     ProjectCancelView,
     ProjectDeleteView,
     ProjectDetailView,
