@@ -126,7 +126,7 @@ const Table = ({
         {sortedRows.map((row, index) => (
           <tr key={index}>
             {visibleColumns.map((column, index) => (
-              <td key={column}style={{ width: columnWidths[index] }}>
+              <td key={column} style={{ width: columnWidths[index] }}>
                 {formatCellContent(row, column, row[column])}
                 </td>
             ))}

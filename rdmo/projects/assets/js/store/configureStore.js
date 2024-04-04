@@ -62,6 +62,7 @@ export default function configureStore() {
         store.dispatch(configActions.updateConfig('params.user', currentUser.id))
       }
       store.dispatch(projectsActions.fetchAllProjects())
+      store.dispatch(projectsActions.fetchInvitations(currentUser.id))
     })
   })
 

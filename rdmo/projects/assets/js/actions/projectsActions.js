@@ -1,5 +1,6 @@
 import ProjectsApi from '../api/ProjectsApi'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS,
+         FETCH_INVITATIONS_ERROR, FETCH_INVITATIONS_INIT, FETCH_INVITATIONS_SUCCESS,
          UPLOAD_PROJECT_ERROR, UPLOAD_PROJECT_INIT, UPLOAD_PROJECT_SUCCESS }
          from './types'
 
@@ -26,6 +27,30 @@ export function fetchProjectsSuccess(projects) {
 
 export function fetchProjectsError(error) {
   return {type: FETCH_PROJECTS_ERROR, error}
+}
+
+export function fetchInvitations(userId) {
+  return function(dispatch) {
+    dispatch(fetchInvitationsInit())
+    const action = (dispatch) => ProjectsApi.fetchInvites(userId)
+          .then(invites => {
+            dispatch(fetchInvitationsSuccess({ invites }))})
+
+    return dispatch(action)
+      .catch(error => dispatch(fetchInvitationsError(error)))
+  }
+}
+
+export function fetchInvitationsInit() {
+  return {type: FETCH_INVITATIONS_INIT}
+}
+
+export function fetchInvitationsSuccess(invites) {
+  return {type: FETCH_INVITATIONS_SUCCESS, invites}
+}
+
+export function fetchInvitationsError(error) {
+  return {type: FETCH_INVITATIONS_ERROR, error}
 }
 
 export function uploadProject(url, file) {

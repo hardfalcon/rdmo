@@ -1,19 +1,23 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import Table from '../helper/Table'
+import PendingInvitationsModal from '../helper/PendingInvitationsModal'
 import Link from 'rdmo/core/assets/js/components/Link'
 import { SearchField } from 'rdmo/core/assets/js/components/SearchAndFilter'
 import FileUploadButton from 'rdmo/core/assets/js/components/FileUploadButton'
+import useModal from 'rdmo/core/assets/js/hooks/useModal'
 import language from 'rdmo/core/assets/js/utils/language'
 import userIsManager from '../../utils/userIsManager'
 import { getTitlePath } from '../../utils/getProjectTitlePath'
 import { DATE_OPTIONS, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils/constants'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
-  const { projects } = projectsObject
+  const { invites, projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
+
+  const [showModal, openModal, closeModal] = useModal()
 
   const [showTopButton, setShowTopButton] = useState(false)
 
@@ -146,6 +150,11 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2 className="ml-10 mt-0">{headline}</h2>
         <div className="icon-container ml-auto">
+          { !isEmpty(invites) && myProjects &&
+          <button className="btn btn-link mr-10" onClick={openModal}>
+            {gettext('Pending invitations')}
+          </button>
+          }
           <button className="btn btn-link mr-10" onClick={handleNew}>
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
@@ -171,7 +180,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       {isManager &&
       <div className="mb-10">
         <Link className="element-link mb-20" onClick={handleView}>
-            {viewLinkText}
+        {viewLinkText}
         </Link>
       </div>
       }
@@ -187,6 +196,11 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         scrollToTop={scrollToTop}
         sortableColumns={SORTABLE_COLUMNS}
         visibleColumns={visibleColumns}
+      />
+      <PendingInvitationsModal
+          invitations={invites}
+          show={showModal}
+          onClose={closeModal}
       />
     </>
   )
