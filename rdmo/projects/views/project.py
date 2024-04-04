@@ -32,16 +32,8 @@ from ..utils import get_upload_accept, set_context_querystring_with_filter_and_p
 
 logger = logging.getLogger(__name__)
 
-# class NewProjectsView(LoginRequiredMixin, PermissionRedirectMixin, RulesPermissionRequiredMixin,
-#                      CSRFViewMixin, TemplateView):
-#     template_name = 'projects/new_projects.html'
-
-#     def has_permission(self):
-#         # Use test_rule from rules for permissions check
-#         return test_rule('projects.can_view_all_projects', self.request.user, self.request.site)
-
-class NewProjectsView(LoginRequiredMixin, CSRFViewMixin, TemplateView):
-    template_name = 'projects/new_projects.html'
+class ProjectsView(LoginRequiredMixin, CSRFViewMixin, TemplateView):
+    template_name = 'projects/projects.html'
 
     # def has_permission(self):
     #     # Use test_rule from rules for permissions check
@@ -53,8 +45,8 @@ class NewProjectsView(LoginRequiredMixin, CSRFViewMixin, TemplateView):
       response.set_cookie('storeid', storeid)
       return response
 
-class ProjectsView(LoginRequiredMixin, FilterView):
-    template_name = 'projects/projects.html'
+class OldProjectsView(LoginRequiredMixin, FilterView):
+    template_name = 'projects/old_projects.html'
     context_object_name = 'projects'
     paginate_by = 20
     filterset_class = ProjectFilter
