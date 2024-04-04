@@ -30,9 +30,10 @@ class ProjectsApi extends BaseApi {
     }).then(response => {
         if (response.ok) {
             if (response.url) {
-                window.open(response.url, '_blank')
+                // open in new window:
+                // window.open(response.url, '_blank')
                 // open in same window:
-                // window.location.href = response.url
+                window.location.href = response.url
             } else {
                 throw new Error('Response does not contain a URL')
             }
