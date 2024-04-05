@@ -94,11 +94,11 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   if (myProjects) {
     visibleColumns.splice(2, 0, 'role')
-    columnWidths = ['25%', '20%', '20%', '20%', '5%']
+    columnWidths = ['35%', '20%', '20%', '20%', '5%']
   } else {
     visibleColumns.splice(2, 0, 'created')
     visibleColumns.splice(2, 0, 'owner')
-    columnWidths = ['25%', '10%', '20%', '20%', '20%', '5%']
+    columnWidths = ['35%', '10%', '20%', '20%', '20%', '5%']
   }
 
   const cellFormatters = {
