@@ -1,20 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal } from 'react-bootstrap'
 
 const columnStyle = { color: '#666', width: '25%', paddingLeft: '10px' }
 const tableStyle = { width: '100%' }
 
-const PendingInvitationsModal = ({ invitations, onClose, show }) => {
+const PendingInvitations = ({ invitations }) => {
   const baseUrl = window.location.origin
 
   return (
-    <Modal show={show} onHide={onClose} className="element-modal">
-      <Modal.Header closeButton>
-        <h2 className="modal-title">{gettext('Pending invitations')}</h2>
-      </Modal.Header>
-      <Modal.Body>
-        { <table style={tableStyle}>
+        <table style={tableStyle}>
            <tbody>
             {invitations?.map(item => (
             <tr key={item.id}>
@@ -35,26 +29,17 @@ const PendingInvitationsModal = ({ invitations, onClose, show }) => {
             </tr>
           ))}
         </tbody>
-      </table> }
-      </Modal.Body>
-      <Modal.Footer>
-        <button type="button" className="btn btn-default" onClick={onClose}>
-          {gettext('Close')}
-        </button>
-      </Modal.Footer>
-    </Modal>
+      </table>
   )
 }
 
-PendingInvitationsModal.propTypes = {
+PendingInvitations.propTypes = {
   invitations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     project_title: PropTypes.string.isRequired,
     project: PropTypes.number.isRequired,
     role: PropTypes.string.isRequired,
   })),
-  onClose: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
 }
 
-export default PendingInvitationsModal
+export default PendingInvitations

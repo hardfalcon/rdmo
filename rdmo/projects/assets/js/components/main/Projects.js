@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import { PendingInvitationsModal, Table } from '../helper'
-import { FileUploadButton, Link, SearchField } from 'rdmo/core/assets/js/components'
+import { PendingInvitations, Table } from '../helper'
+import { FileUploadButton, Link, Modal, SearchField } from 'rdmo/core/assets/js/components'
 import useModal from 'rdmo/core/assets/js/hooks/useModal'
 import { language } from 'rdmo/core/assets/js/utils'
 import { getTitlePath, userIsManager, DATE_OPTIONS, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils'
@@ -13,6 +13,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { myProjects } = config
 
   const [showModal, openModal, closeModal] = useModal()
+  const modalProps = {title: gettext('Pending invitations'), show: showModal, onClose: closeModal }
 
   const [showTopButton, setShowTopButton] = useState(false)
 
@@ -156,7 +157,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           <FileUploadButton
            acceptedTypes={['application/xml', 'text/xml']}
            buttonProps={{'className': 'btn btn-link'}}
-           buttonText={gettext('Import project')}
+           buttonLabel={gettext('Import project')}
            onImportFile={handleImport}
           />
         </div>
@@ -192,11 +193,9 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         sortableColumns={SORTABLE_COLUMNS}
         visibleColumns={visibleColumns}
       />
-      <PendingInvitationsModal
-          invitations={invites}
-          show={showModal}
-          onClose={closeModal}
-      />
+      <Modal {...modalProps}>
+        <PendingInvitations invitations={invites} />
+      </Modal>
     </>
   )
 }
