@@ -13,7 +13,7 @@ const PendingInvitations = ({ invitations }) => {
           <div className="w-50">
             {gettext(item.role).charAt(0).toUpperCase() + gettext(item.role).slice(1)}
           </div>
-          <div className="w-25">
+          <div className="w-25 align-right">
             <button className="btn btn-xs btn-success ml-10" onClick={() => { window.location.href = `${baseUrl}/projects/join/${item.project}` }}>{gettext('Accept')}</button>
             <button className="btn btn-xs btn-danger ml-10" onClick={() => { window.location.href = `${baseUrl}/projects/cancel/${item.project}` }}>{gettext('Decline')}</button>
           </div>
