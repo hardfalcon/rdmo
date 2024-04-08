@@ -5,8 +5,7 @@ const PendingInvitations = ({ invitations }) => {
   const baseUrl = window.location.origin
 
   return (
-    <ul>
-      {invitations?.map(item => (
+      invitations?.map(item => (
         <div key={item.id} className="row-container">
           <div className="w-100 mb-5">
             <b>{item.project_title}</b>
@@ -19,8 +18,7 @@ const PendingInvitations = ({ invitations }) => {
             <button className="btn btn-xs btn-danger ml-10" onClick={() => { window.location.href = `${baseUrl}/projects/cancel/${item.project}` }}>{gettext('Decline')}</button>
           </div>
         </div>
-      ))}
-    </ul>
+      ))
   )
 }
 
