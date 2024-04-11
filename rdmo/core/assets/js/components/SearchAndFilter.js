@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { debounce } from 'lodash'
+import 'react-datepicker/dist/react-datepicker.css'
 
-const SearchField = ({ value, onChange, onSearch, placeholder, delay }) => {
-  const handleSearch = debounce(() => {
+const SearchField = ({ value, onChange, onSearch, placeholder }) => {
+
+  const handleSearch = () => {
     onSearch(value)
-  }, delay ?? 300)
+  }
 
   const handleChange = (newValue) => {
     onChange(newValue)
@@ -51,39 +52,18 @@ SearchField.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
-  delay: PropTypes.number, // Optional: Specify the delay time in milliseconds
 }
 
-const TextField = ({ value, onChange, placeholder }) => {
+const Select = ({ options, onChange, placeholder, value }) => {
   return (
     <div className="form-group mb-0">
-      <div className="input-group">
-        <input type="text" className="form-control" placeholder={placeholder}
-               value={ value } onChange={e => onChange(e.target.value)}></input>
-        <span className="input-group-btn">
-          <button className="btn btn-default" onClick={() => onChange('')}>
-            <span className="fa fa-times"></span>
-          </button>
-        </span>
-      </div>
-    </div>
-  )
-}
-
-TextField.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string.isRequired
-}
-
-const Select = ({ value, options, onChange, placeholder }) => {
-  return (
-    <div className="form-group mb-0">
-      <select className="form-control" value={value} onChange={e => onChange(e.target.value)}>
+      <select className="form-control" onChange={e => onChange(e.target.value)} value={value}>
         <option value="">{placeholder}</option>
-        {
-          options.map((option, index) => <option value={option} key={index}>{option}</option>)
-        }
+        {options.map((option, index) => (
+          <option value={option.value} key={index}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   )
@@ -91,9 +71,14 @@ const Select = ({ value, options, onChange, placeholder }) => {
 
 Select.propTypes = {
   value: PropTypes.string,
-  options: PropTypes.array.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.number.isRequired,
+      label: PropTypes.string.isRequired
+    })
+  ).isRequired,
   onChange: PropTypes.func,
   placeholder: PropTypes.string
 }
 
-export { SearchField, Select, TextField }
+export { SearchField, Select }

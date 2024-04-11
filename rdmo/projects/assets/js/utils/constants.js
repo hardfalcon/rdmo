@@ -11,12 +11,3 @@ export const HEADER_FORMATTERS = {
   updated: {render: () => gettext('Last changed')},
   actions: {render: () => null},
 }
-
-// date format
-export const DATE_OPTIONS = {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric'
-}

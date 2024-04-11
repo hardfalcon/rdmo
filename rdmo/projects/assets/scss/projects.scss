@@ -2,6 +2,7 @@ $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
 @import '~bootstrap-sass';
 @import '~font-awesome/css/font-awesome.css';
 @import 'rdmo/core/assets/scss/variables';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 a.disabled {
     cursor: not-allowed;
@@ -204,17 +205,6 @@ a.disabled {
   }
 }
 
-.table-container {
-  position: relative;
-}
-
-.table thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background-color: white;
-}
-
 .elliptic-button {
   padding: 5px 14px;
   background-color: #fff;
@@ -245,4 +235,46 @@ a.disabled {
   background-color: #ccc;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.panel {
+  border: none;
+  box-shadow: none;
+}
+
+.search-container {
+  width: 100%;
+
+  .search-field {
+    width: 100%;
+  }
+}
+
+.filter-container-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; // Provides spacing between filter groups
+  margin-bottom: 20px;
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    width: calc(33.33% - 10px); // Subtract the gap from the width
+
+    .filter-fields-container {
+      display: flex;
+      gap: 10px; // Spacing between individual filters
+
+      .form-control, .select-custom {
+        width: 100%; // The filters take up the full width of their container
+      }
+    }
+  }
+}
+
+.project-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; // Replicates the removed inline style
 }

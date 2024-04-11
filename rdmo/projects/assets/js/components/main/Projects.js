@@ -1,42 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { PendingInvitations, Table } from '../helper'
+
+import { PendingInvitations, ProjectFilters, Table } from '../helper'
 import { FileUploadButton, Link, Modal, SearchField } from 'rdmo/core/assets/js/components'
-import useModal from 'rdmo/core/assets/js/hooks/useModal'
+import { useFormattedDateTime, useModal, useScrollToTop }  from 'rdmo/core/assets/js/hooks'
 import { language } from 'rdmo/core/assets/js/utils'
-import { getTitlePath, userIsManager, DATE_OPTIONS, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils'
+import { getTitlePath, userIsManager, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils'
 import { get, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
-  const { invites, projects } = projectsObject
+  const { catalogs, invites, projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
-  const [showModal, openModal, closeModal] = useModal()
-  const modalProps = {title: gettext('Pending invitations'), show: showModal, onClose: closeModal }
+  const { showTopButton, scrollToTop } = useScrollToTop()
+  const { show, open, close } = useModal()
+  const modalProps = {title: gettext('Pending invitations'), show: show, onClose: close }
 
-  const [showTopButton, setShowTopButton] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.pageYOffset > 100) {
-        setShowTopButton(true)
-      } else {
-        setShowTopButton(false)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
+  const baseUrl = window.location.origin
   const displayedRows = get(config, 'tableRows', '')
 
   const currentUserId = currentUser.id
@@ -44,19 +25,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   const searchString = get(config, 'params.search', '')
   const updateSearchString = (value) => {
-    const normedValue = value.toLowerCase()
-    normedValue ? configActions.updateConfig('params.search', normedValue) : configActions.deleteConfig('params.search')
-  }
-
-  const baseUrl = window.location.origin
-
-  const langOptions = language == 'de' ?
-  { hour12: false } :
-  { hour12: true }
-
-  const dateOptions = {
-    ...langOptions,
-    DATE_OPTIONS
+    value ? configActions.updateConfig('params.search', value) : configActions.deleteConfig('params.search')
   }
 
   const viewLinkText = myProjects ? gettext('View all projects') : gettext('View my projects')
@@ -116,8 +85,8 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     },
     owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
     progress: (_content, row) => row.progress_total ? `${row.progress_count ?? 0} ${gettext('of')} ${row.progress_total}` : null,
-    created: content => new Date(content).toLocaleString(language, dateOptions),
-    updated: content => new Date(content).toLocaleString(language, dateOptions),
+    created: content => useFormattedDateTime(content, language),
+    updated: content => useFormattedDateTime(content, language),
     actions: (_content, row) => {
       const rowUrl = `${baseUrl}/projects/${row.id}`
       const path = `?next=${window.location.pathname}`
@@ -143,11 +112,11 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   return (
     <>
-      <div className="mb-10" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 className="ml-10 mt-0">{headline}</h2>
-        <div className="icon-container ml-auto">
+      <div className="project-header-container">
+        <h2 className="headline mt-0">{headline}</h2>
+        <div className="icon-container">
           { !isEmpty(invites) && myProjects &&
-          <button className="btn btn-link mr-10" onClick={openModal}>
+          <button className="btn btn-link mr-10" onClick={open}>
             {gettext('Pending invitations')}
           </button>
           }
@@ -155,31 +124,41 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
           <FileUploadButton
-           acceptedTypes={['application/xml', 'text/xml']}
-           buttonProps={{'className': 'btn btn-link'}}
-           buttonLabel={gettext('Import project')}
-           onImportFile={handleImport}
+          acceptedTypes={['application/xml', 'text/xml']}
+          buttonProps={{'className': 'btn btn-link'}}
+          buttonLabel={gettext('Import project')}
+          onImportFile={handleImport}
           />
         </div>
       </div>
-      <span>{parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}</span>
-      <div className="panel-body">
-        <div className="row">
+      <div className="panel">
+        <div className="panel-group">
+          {parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}
+        </div>
+        <div className="search-container">
           <SearchField
             value={searchString}
             onChange={updateSearchString}
             onSearch={projectsActions.fetchAllProjects}
             placeholder={gettext('Search projects')}
+            className="search-field"
           />
         </div>
-      </div>
+        <ProjectFilters
+          catalogs={catalogs ?? []}
+          config={config}
+          configActions={configActions}
+          isManager={isManager}
+          projectsActions={projectsActions}
+        />
       {isManager &&
-      <div className="mb-10">
-        <Link className="element-link mb-20" onClick={handleView}>
-        {viewLinkText}
-        </Link>
-      </div>
+        <div className="panel-group">
+          <Link className="element-link mb-20" onClick={handleView}>
+            {viewLinkText}
+          </Link>
+        </div>
       }
+      </div>
       <Table
         cellFormatters={cellFormatters}
         columnWidths={columnWidths}

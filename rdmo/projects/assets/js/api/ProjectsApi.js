@@ -36,6 +36,16 @@ class ProjectsApi extends BaseApi {
   //   })
   // }
 
+  static fetchCatalogs() {
+    return fetch('/api/v1/projects/catalogs/').then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        throw new Error(response.statusText)
+      }
+    })
+  }
+
   static fetchInvites(userId) {
     return fetch(`/api/v1/projects/invites/?user=${userId}`)
       .then(response => {

@@ -1,6 +1,7 @@
 import ProjectsApi from '../api/ProjectsApi'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS,
          FETCH_INVITATIONS_ERROR, FETCH_INVITATIONS_INIT, FETCH_INVITATIONS_SUCCESS,
+         FETCH_CATALOGS_ERROR, FETCH_CATALOGS_INIT, FETCH_CATALOGS_SUCCESS,
          UPLOAD_PROJECT_ERROR, UPLOAD_PROJECT_INIT, UPLOAD_PROJECT_SUCCESS }
          from './types'
 
@@ -27,6 +28,30 @@ export function fetchProjectsSuccess(projects) {
 
 export function fetchProjectsError(error) {
   return {type: FETCH_PROJECTS_ERROR, error}
+}
+
+export function fetchCatalogs() {
+  return function(dispatch) {
+    dispatch(fetchCatalogsInit())
+    const action = (dispatch) => ProjectsApi.fetchCatalogs()
+          .then(catalogs => {
+            dispatch(fetchCatalogsSuccess({ catalogs }))})
+
+    return dispatch(action)
+      .catch(error => dispatch(fetchCatalogsError(error)))
+  }
+}
+
+export function fetchCatalogsInit() {
+  return {type: FETCH_CATALOGS_INIT}
+}
+
+export function fetchCatalogsSuccess(catalogs) {
+  return {type: FETCH_CATALOGS_SUCCESS, catalogs}
+}
+
+export function fetchCatalogsError(error) {
+  return {type: FETCH_CATALOGS_ERROR, error}
 }
 
 export function fetchInvitations(userId) {
