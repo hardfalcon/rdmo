@@ -60,7 +60,7 @@ from .serializers.v1 import (
 )
 from .serializers.v1.overview import CatalogSerializer, ProjectOverviewSerializer
 from .serializers.v1.page import PageSerializer
-from .utils import check_conditions, send_invite_email
+from .utils import check_conditions, get_upload_accept, send_invite_email
 
 
 class ProjectViewSet(ModelViewSet):
@@ -228,6 +228,10 @@ class ProjectViewSet(ModelViewSet):
             'total': project.progress_total,
             'ratio': ratio
         })
+
+    @action(detail=False, url_path='upload-accept', permission_classes=(IsAuthenticated, ))
+    def upload_accept(self, request):
+        return Response(get_upload_accept())
 
     def perform_create(self, serializer):
         project = serializer.save(site=get_current_site(self.request))
