@@ -55,6 +55,7 @@ from .serializers.v1 import (
     ProjectSnapshotSerializer,
     ProjectValueSerializer,
     SnapshotSerializer,
+    UserInviteSerializer,
     ValueSerializer,
 )
 from .serializers.v1.overview import CatalogSerializer, ProjectOverviewSerializer
@@ -568,6 +569,11 @@ class InviteViewSet(ReadOnlyModelViewSet):
     def get_detail_permission_object(self, obj):
         return obj.project
 
+    @action(detail=False, permission_classes=(IsAuthenticated, ))
+    def user(self, request):
+        invites = Invite.objects.filter(user=self.request.user)
+        serializer = UserInviteSerializer(invites, many=True)
+        return Response(serializer.data)
 
 class IssueViewSet(ReadOnlyModelViewSet):
     permission_classes = (HasModelPermission | HasProjectsPermission, )

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -305,6 +306,21 @@ class InviteSerializer(serializers.ModelSerializer):
             'role',
             'timestamp'
         )
+
+class UserInviteSerializer(InviteSerializer):
+
+    join_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Invite
+        fields = (
+            *InviteSerializer.Meta.fields,
+            'token',
+            'join_url'
+        )
+
+    def get_join_url(self, obj):
+        return reverse('project_join', args=[obj.token])
 
 
 class IssueResourceSerializer(serializers.ModelSerializer):
