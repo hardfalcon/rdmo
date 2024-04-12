@@ -106,6 +106,9 @@ a.disabled {
 .align-right {
   text-align: right;
 }
+.align-left {
+  text-align: left;
+}
 
 .form-group {
     .react-select__control {
@@ -244,6 +247,7 @@ a.disabled {
 
 .search-container {
   width: 100%;
+  margin-bottom: 10px;
 
   .search-field {
     width: 100%;
@@ -254,7 +258,7 @@ a.disabled {
   display: flex;
   flex-wrap: wrap;
   gap: 10px; // Provides spacing between filter groups
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
 
   .filter-group {
     display: flex;
@@ -277,4 +281,8 @@ a.disabled {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px; // Replicates the removed inline style
+}
+
+.mid-grey {
+  color: #9C9C9C !important;
 }

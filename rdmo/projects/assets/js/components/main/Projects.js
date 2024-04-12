@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { PendingInvitations, ProjectFilters, Table } from '../helper'
 import { FileUploadButton, Link, Modal, SearchField } from 'rdmo/core/assets/js/components'
 import { useFormattedDateTime, useModal, useScrollToTop }  from 'rdmo/core/assets/js/hooks'
+import useDatePicker from '../../hooks/useDatePicker'
 import { language } from 'rdmo/core/assets/js/utils'
 import { getTitlePath, userIsManager, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils'
 import { get, isEmpty } from 'lodash'
@@ -17,11 +18,16 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { show, open, close } = useModal()
   const modalProps = {title: gettext('Pending invitations'), show: show, onClose: close }
 
+  const { setStartDate, setEndDate } = useDatePicker()
+
   const baseUrl = window.location.origin
   const displayedRows = get(config, 'tableRows', '')
 
   const currentUserId = currentUser.id
   const isManager = userIsManager(currentUser)
+
+  const showFilters = get(config, 'showFilters', false)
+  const toggleFilters = () => configActions.updateConfig('showFilters', !showFilters)
 
   const searchString = get(config, 'params.search', '')
   const updateSearchString = (value) => {
@@ -47,14 +53,32 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     const pathArray = getTitlePath(projects, title, row).split(' / ')
     const lastChild = pathArray.pop()
 
+    const catalog = catalogs.find(c => c.id === row.catalog)
+
     return (
-      <a href={`${baseUrl}/projects/${row.id}`}>
-        {pathArray.map((path, index) => (
-          <span key={index}>{path} / </span>
-        ))}
-        <b>{lastChild}</b>
-      </a>
+      <div>
+        <a href={`${baseUrl}/projects/${row.id}`}>
+          {pathArray.map((path, index) => (
+            <span key={index}>{path} / </span>
+          ))}
+          <b>{lastChild}</b>
+        </a>
+        <div className='mid-grey'>{catalog ? catalog.title : null}</div>
+      </div>
     )
+  }
+
+  const resetAllFilters = () => {
+    configActions.deleteConfig('params.catalog')
+    configActions.deleteConfig('params.created_after')
+    setStartDate('created', null)
+    configActions.deleteConfig('params.created_before')
+    setEndDate('created', null)
+    configActions.deleteConfig('params.updated_after')
+    setStartDate('updated', null)
+    configActions.deleteConfig('params.updated_before')
+    setEndDate('updated', null)
+    projectsActions.fetchAllProjects()
   }
 
   /* order of elements in 'visibleColumns' corresponds to order of columns in table */
@@ -144,6 +168,15 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             className="search-field"
           />
         </div>
+          <Link className="element-link mb-10" onClick={toggleFilters}>
+            {showFilters ? gettext('Hide filters') : gettext('Show filters')}
+          </Link>
+          {showFilters && (
+            <Link className="element-link ml-10 mb-10" onClick={resetAllFilters}>
+              {gettext('Reset all filters')}
+            </Link>
+          )}
+        {showFilters && (
         <ProjectFilters
           catalogs={catalogs ?? []}
           config={config}
@@ -151,14 +184,20 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           isManager={isManager}
           projectsActions={projectsActions}
         />
-      {isManager &&
+        )}
+      {/* {isManager &&
         <div className="panel-group">
           <Link className="element-link mb-20" onClick={handleView}>
             {viewLinkText}
           </Link>
         </div>
-      }
+      } */}
       </div>
+      {isManager &&
+          <Link className="element-link mb-20 pb-20" onClick={handleView}>
+            {viewLinkText}
+          </Link>
+      }
       <Table
         cellFormatters={cellFormatters}
         columnWidths={columnWidths}

@@ -5,6 +5,7 @@ import { INITIAL_TABLE_ROWS } from '../utils/constants'
 const initialState = {
   myProjects: true,
   params: {},
+  showFilters: false,
   tableRows: INITIAL_TABLE_ROWS
 }
 

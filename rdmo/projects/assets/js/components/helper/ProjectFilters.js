@@ -18,9 +18,8 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
     setEndDate
   } = useDatePicker()
 
-  const catalogOptions = catalogs?.map(({ id, title }) => ({ value: id, label: title }))
+  const catalogOptions = catalogs?.map(catalog => ({ value: catalog.id.toString(), label: catalog.title }))
   const selectedCatalog = get(config, 'params.catalog', '')
-  console.log('selectedCatalog', selectedCatalog)
   const updateCatalogFilter = (value) => {
     value ? configActions.updateConfig('params.catalog', value) : configActions.deleteConfig('params.catalog')
     projectsActions.fetchAllProjects()
@@ -29,7 +28,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
   return (
     <div className="filter-container-group">
       <div className="filter-group">
-        <h3>{gettext('Filter by catalog')}</h3>
+        <h6>{gettext('Filter by catalog')}</h6>
         <div className="search-container">
           <Select
             className="select-custom"
@@ -42,7 +41,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
       </div>
       {isManager && (
         <div className="filter-group">
-          <h3>{gettext('Filter by created date')}</h3>
+          <h6>{gettext('Filter by created date')}</h6>
           <div className="filter-fields-container">
             <DatePicker
               autoComplete="off"
@@ -86,7 +85,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
         </div>
       )}
       <div className="filter-group">
-        <h3>{gettext('Filter by last changed date')}</h3>
+        <h6>{gettext('Filter by last changed date')}</h6>
         <div className="filter-fields-container">
           <DatePicker
             autoComplete="off"
@@ -133,7 +132,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
 }
 
 ProjectFilters.propTypes = {
-  catalogs: PropTypes.array.isRequired,
+  catalogs: PropTypes.arrayOf(PropTypes.object).isRequired,
   config: PropTypes.object.isRequired,
   configActions: PropTypes.object.isRequired,
   isManager: PropTypes.bool.isRequired,
