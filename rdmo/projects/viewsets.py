@@ -55,11 +55,12 @@ from .serializers.v1 import (
     ProjectSnapshotSerializer,
     ProjectValueSerializer,
     SnapshotSerializer,
+    UserInviteSerializer,
     ValueSerializer,
 )
 from .serializers.v1.overview import CatalogSerializer, ProjectOverviewSerializer
 from .serializers.v1.page import PageSerializer
-from .utils import check_conditions, send_invite_email
+from .utils import check_conditions, get_upload_accept, send_invite_email
 
 
 class ProjectViewSet(ModelViewSet):
@@ -227,6 +228,10 @@ class ProjectViewSet(ModelViewSet):
             'total': project.progress_total,
             'ratio': ratio
         })
+
+    @action(detail=False, url_path='upload-accept', permission_classes=(IsAuthenticated, ))
+    def upload_accept(self, request):
+        return Response(get_upload_accept())
 
     def perform_create(self, serializer):
         project = serializer.save(site=get_current_site(self.request))
@@ -568,6 +573,11 @@ class InviteViewSet(ReadOnlyModelViewSet):
     def get_detail_permission_object(self, obj):
         return obj.project
 
+    @action(detail=False, permission_classes=(IsAuthenticated, ))
+    def user(self, request):
+        invites = Invite.objects.filter(user=self.request.user)
+        serializer = UserInviteSerializer(invites, many=True)
+        return Response(serializer.data)
 
 class IssueViewSet(ReadOnlyModelViewSet):
     permission_classes = (HasModelPermission | HasProjectsPermission, )
