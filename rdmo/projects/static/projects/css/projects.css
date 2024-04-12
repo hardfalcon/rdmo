@@ -10516,3 +10516,9 @@ a.disabled {
 .mid-grey {
   color: #9C9C9C !important;
 }
+
+.react-datepicker__close-icon::after {
+  background-color: #fff;
+  color: black;
+  font-size: 1.5em;
+}
