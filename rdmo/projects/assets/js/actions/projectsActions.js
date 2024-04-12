@@ -2,6 +2,7 @@ import ProjectsApi from '../api/ProjectsApi'
 import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS,
          FETCH_INVITATIONS_ERROR, FETCH_INVITATIONS_INIT, FETCH_INVITATIONS_SUCCESS,
          FETCH_CATALOGS_ERROR, FETCH_CATALOGS_INIT, FETCH_CATALOGS_SUCCESS,
+         FETCH_FILETYPES_ERROR, FETCH_FILETYPES_INIT, FETCH_FILETYPES_SUCCESS,
          UPLOAD_PROJECT_ERROR, UPLOAD_PROJECT_INIT, UPLOAD_PROJECT_SUCCESS }
          from './types'
 
@@ -54,10 +55,34 @@ export function fetchCatalogsError(error) {
   return {type: FETCH_CATALOGS_ERROR, error}
 }
 
-export function fetchInvitations(userId) {
+export function fetchAllowedFileTypes() {
+  return function(dispatch) {
+    dispatch(fetchAllowedFileTypesInit())
+    const action = (dispatch) => ProjectsApi.fetchAllowedFileTypes()
+          .then(allowedTypes => {
+            dispatch(fetchAllowedFileTypesSuccess({ allowedTypes }))})
+
+    return dispatch(action)
+      .catch(error => dispatch(fetchAllowedFileTypesError(error)))
+  }
+}
+
+export function fetchAllowedFileTypesInit() {
+  return {type: FETCH_FILETYPES_INIT}
+}
+
+export function fetchAllowedFileTypesSuccess(allowedTypes) {
+  return {type: FETCH_FILETYPES_SUCCESS, allowedTypes}
+}
+
+export function fetchAllowedFileTypesError(error) {
+  return {type: FETCH_FILETYPES_ERROR, error}
+}
+
+export function fetchInvitations() {
   return function(dispatch) {
     dispatch(fetchInvitationsInit())
-    const action = (dispatch) => ProjectsApi.fetchInvites(userId)
+    const action = (dispatch) => ProjectsApi.fetchInvites()
           .then(invites => {
             dispatch(fetchInvitationsSuccess({ invites }))})
 

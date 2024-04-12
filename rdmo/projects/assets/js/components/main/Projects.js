@@ -10,7 +10,7 @@ import { getTitlePath, userIsManager, HEADER_FORMATTERS, SORTABLE_COLUMNS } from
 import { get, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
-  const { catalogs, invites, projects } = projectsObject
+  const { allowedTypes, catalogs, invites, projects } = projectsObject
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
@@ -148,10 +148,10 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
           <FileUploadButton
-          acceptedTypes={['application/xml', 'text/xml']}
-          buttonProps={{'className': 'btn btn-link'}}
-          buttonLabel={gettext('Import project')}
-          onImportFile={handleImport}
+            acceptedTypes={allowedTypes}
+            buttonProps={{'className': 'btn btn-link'}}
+            buttonLabel={gettext('Import project')}
+            onImportFile={handleImport}
           />
         </div>
       </div>

@@ -15,27 +15,6 @@ class ProjectsApi extends BaseApi {
     })
   }
 
-  // static fetchInvites(userId) {
-  //   return fetch(`/api/v1/projects/invites/?user=${userId}`).then(response => {
-  //     if (response.ok) {
-  //       return response.json()
-  //     } else {
-  //       throw new Error(response.statusText)
-  //     }
-  //   }).then(invites => {
-  //     const projectPromises = invites.map(invite => {
-  //       return fetch(`/api/v1/projects/projects/${invite.project}`).then(response => {
-  //         if (response.ok) {
-  //           return response.json()
-  //         } else {
-  //           throw new Error(response.statusText)
-  //         }
-  //       })
-  //     })
-  //     return Promise.all(projectPromises)
-  //   })
-  // }
-
   static fetchCatalogs() {
     return fetch('/api/v1/projects/catalogs/').then(response => {
       if (response.ok) {
@@ -46,8 +25,33 @@ class ProjectsApi extends BaseApi {
     })
   }
 
-  static fetchInvites(userId) {
-    return fetch(`/api/v1/projects/invites/?user=${userId}`)
+  // static fetchAllowedFileTypes() {
+  //   return fetch('/api/v1/projects/upload-accept/').then(response => {
+  //     if (response.ok) {
+  //       return response.json()
+  //     } else {
+  //       throw new Error(response.statusText)
+  //     }
+  //   })
+  // }
+
+  static fetchAllowedFileTypes() {
+    return fetch('/api/v1/projects/projects/upload-accept/')
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw new Error(response.statusText)
+        }
+      })
+      .then(text => {
+        return text.split(',')
+      })
+  }
+
+
+  static fetchInvites() {
+    return fetch('/api/v1/projects/invites/user')
       .then(response => {
         if (response.ok) {
           return response.json()
