@@ -10522,3 +10522,7 @@ a.disabled {
   color: black;
   font-size: 1.5em;
 }
+
+.thead-dark th {
+  cursor: pointer;
+}
