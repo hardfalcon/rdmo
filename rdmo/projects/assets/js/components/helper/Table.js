@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
 import { ROWS_TO_LOAD } from '../../utils'
@@ -19,8 +19,6 @@ const Table = ({
   visibleColumns,
 }) => {
   const displayedRows = get(config, 'tableRows')
-
-  const [lastClicked, setLastClicked] = useState({ column: null, count: 0 })
 
   const extractSortingParams = (params) => {
     const { ordering } = params || {}
@@ -70,27 +68,14 @@ const Table = ({
     )
   }
 
+
   const handleHeaderClick = (column) => {
     if (sortableColumns.includes(column)) {
-      let { column: lastColumn, count } = lastClicked
-
-      if (lastColumn !== column) {
-        count = 1
+      if (sortColumn === column) {
+        configActions.updateConfig('params.ordering', sortOrder === 'asc' ? `-${column}` : column)
       } else {
-        count++
+        configActions.updateConfig('params.ordering', column)
       }
-
-      if (count === 3) {
-        configActions.deleteConfig('params.ordering')
-        count = 0
-      } else {
-        if (sortColumn === column) {
-          configActions.updateConfig('params.ordering', sortOrder === 'asc' ? `-${column}` : column)
-        } else {
-          configActions.updateConfig('params.ordering', column)
-        }
-      }
-      setLastClicked({ column, count })
       projectsActions.fetchAllProjects()
     }
   }
