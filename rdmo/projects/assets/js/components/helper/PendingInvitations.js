@@ -8,7 +8,7 @@ const PendingInvitations = ({ invitations }) => {
       invitations?.map(item => (
         <div key={item.id} className="row-container">
           <div className="w-100 mb-5">
-            <b>{item.project_title}</b>
+            <b>{item.title}</b>
           </div>
           <div className="w-50">
             {gettext(item.role).charAt(0).toUpperCase() + gettext(item.role).slice(1)}
@@ -25,7 +25,7 @@ const PendingInvitations = ({ invitations }) => {
 PendingInvitations.propTypes = {
   invitations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    project_title: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     project: PropTypes.number.isRequired,
     role: PropTypes.string.isRequired,
     token: PropTypes.string.isRequired

@@ -309,19 +309,17 @@ class InviteSerializer(serializers.ModelSerializer):
 
 class UserInviteSerializer(InviteSerializer):
 
-    join_url = serializers.SerializerMethodField()
+    title = serializers.CharField(source='project.title')
+    description = serializers.CharField(source='project.description')
 
     class Meta:
         model = Invite
         fields = (
             *InviteSerializer.Meta.fields,
+            'title',
+            'description',
             'token',
-            'join_url'
         )
-
-    def get_join_url(self, obj):
-        return reverse('project_join', args=[obj.token])
-
 
 class IssueResourceSerializer(serializers.ModelSerializer):
 

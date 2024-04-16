@@ -25,16 +25,6 @@ class ProjectsApi extends BaseApi {
     })
   }
 
-  // static fetchAllowedFileTypes() {
-  //   return fetch('/api/v1/projects/upload-accept/').then(response => {
-  //     if (response.ok) {
-  //       return response.json()
-  //     } else {
-  //       throw new Error(response.statusText)
-  //     }
-  //   })
-  // }
-
   static fetchAllowedFileTypes() {
     return fetch('/api/v1/projects/projects/upload-accept/')
       .then(response => {
@@ -49,7 +39,6 @@ class ProjectsApi extends BaseApi {
       })
   }
 
-
   static fetchInvites() {
     return fetch('/api/v1/projects/invites/user')
       .then(response => {
@@ -59,31 +48,7 @@ class ProjectsApi extends BaseApi {
           throw new Error(response.statusText)
         }
       })
-      .then(invites => {
-        const projectRequests = invites.map(invite => {
-          return fetch(`/api/v1/projects/projects/${invite.project}/`)
-            .then(response => {
-              if (response.ok) {
-                return response.json()
-              } else {
-                throw new Error(response.statusText)
-              }
-            })
-            .then(project => {
-              invite.project_title = project.title
-              return invite
-            })
-            .catch(error => {
-              throw new Error(`Error fetching project: ${error.message}`)
-            })
-        })
-        return Promise.all(projectRequests)
-      })
-      .catch(error => {
-        throw new Error(`API error: ${error.message}`)
-      })
   }
-
 
   static uploadProject(url, file) {
     var formData = new FormData()

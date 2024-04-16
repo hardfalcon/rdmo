@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
 import { PendingInvitations, ProjectFilters, Table } from '../helper'
 import { FileUploadButton, Link, Modal, SearchField } from 'rdmo/core/assets/js/components'
 import { useFormattedDateTime, useModal, useScrollToTop }  from 'rdmo/core/assets/js/hooks'
 import useDatePicker from '../../hooks/useDatePicker'
 import { language } from 'rdmo/core/assets/js/utils'
-import { getTitlePath, userIsManager, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils'
+import { getTitlePath, getUserRoles, userIsManager, HEADER_FORMATTERS, SORTABLE_COLUMNS } from '../../utils'
 import { get, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
@@ -98,14 +97,8 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     title: (content, row) => renderTitle(content, row),
     role: (_content, row) => {
       const arraysToSearch = ['authors', 'guests', 'managers', 'owners']
-      let foundInArrays = []
-      arraysToSearch.forEach(arrayName => {
-        if (row[arrayName].some(item => item.id === currentUserId)) {
-          let name = arrayName.charAt(0).toUpperCase() + arrayName.slice(1, -1)
-          foundInArrays.push(gettext(name))
-        }
-      })
-      return foundInArrays.length > 0 ? gettext(foundInArrays.join(', ')) : null
+      const { rolesString } = getUserRoles(row, currentUserId, arraysToSearch)
+      return rolesString
     },
     owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
     progress: (_content, row) => row.progress_total ? `${row.progress_count ?? 0} ${gettext('of')} ${row.progress_total}` : null,
@@ -114,21 +107,25 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     actions: (_content, row) => {
       const rowUrl = `${baseUrl}/projects/${row.id}`
       const path = `?next=${window.location.pathname}`
-
+      const { isProjectManager, isProjectOwner } = getUserRoles(row, currentUserId, ['managers', 'owners'])
       return (
         <div className="icon-container">
+          {(isProjectManager || isProjectOwner || isManager) &&
           <Link
             href={`${rowUrl}/update`}
             className="element-link fa fa-pencil"
             title={row.title}
             onClick={() => window.location.href = `${rowUrl}/update/${path}`}
           />
+          }
+          {(isProjectOwner || isManager) &&
           <Link
             href={`${rowUrl}/delete`}
             className="element-link fa fa-trash"
             title={row.title}
             onClick={() => window.location.href = `${rowUrl}/delete/${path}`}
           />
+          }
         </div>
       )
     }
@@ -139,9 +136,17 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       <div className="project-header-container">
         <h2 className="headline mt-0">{headline}</h2>
         <div className="icon-container">
-          { !isEmpty(invites) && myProjects &&
+          {!isEmpty(invites) && myProjects &&
           <button className="btn btn-link mr-10" onClick={open}>
+            <span className="badge badge-primary">
+              {invites.length}
+            </span>
             {gettext('Pending invitations')}
+          </button>
+          }
+          {isManager &&
+          <button className="btn btn-link mr-10" onClick={handleView}>
+            {viewLinkText}
           </button>
           }
           <button className="btn btn-link mr-10" onClick={handleNew}>
@@ -185,19 +190,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           projectsActions={projectsActions}
         />
         )}
-      {/* {isManager &&
-        <div className="panel-group">
-          <Link className="element-link mb-20" onClick={handleView}>
-            {viewLinkText}
-          </Link>
-        </div>
-      } */}
       </div>
-      {isManager &&
-          <Link className="element-link mb-20 pb-20" onClick={handleView}>
-            {viewLinkText}
-          </Link>
-      }
       <Table
         cellFormatters={cellFormatters}
         columnWidths={columnWidths}
