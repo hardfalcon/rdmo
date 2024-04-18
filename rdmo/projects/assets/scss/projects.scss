@@ -188,6 +188,7 @@ a.disabled {
 .icon-container {
   display: flex;
   gap: 5px;
+  margin-bottom: 10px;
 }
 
 .projects-search {
@@ -278,12 +279,8 @@ a.disabled {
 .project-header-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
   margin-bottom: 10px; // Replicates the removed inline style
-}
-
-.mid-grey {
-  color: #9C9C9C !important;
 }
 
 .react-datepicker__close-icon::after {
@@ -296,9 +293,14 @@ a.disabled {
   cursor: pointer;
 }
 
-.badge-primary {
-  background-color: #337ab7;
+.badge-invitations {
+  background-color: $link-color;
   color: #fff;
-  border-color: #2e6da4;
   margin-right: 5px;
+}
+
+.btn.btn-link {
+  &:focus {
+    outline:0;
+  }
 }

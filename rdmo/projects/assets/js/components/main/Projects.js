@@ -62,7 +62,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           ))}
           <b>{lastChild}</b>
         </a>
-        <div className='mid-grey'>{catalog ? catalog.title : null}</div>
+        <div className='text-muted'>{catalog ? catalog.title : null}</div>
       </div>
     )
   }
@@ -131,13 +131,13 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   }
 
   return (
-    <>
+    <div class="projects">
       <div className="project-header-container">
-        <h2 className="headline mt-0">{headline}</h2>
+        <h1>{headline}</h1>
         <div className="icon-container">
           {!isEmpty(invites) && myProjects &&
           <button className="btn btn-link mr-10" onClick={open}>
-            <span className="badge badge-primary">
+            <span className="badge badge-primary badge-invitations">
               {invites.length}
             </span>
             {gettext('Pending invitations')}
@@ -160,7 +160,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         </div>
       </div>
       <div className="panel">
-        <div className="panel-group">
+        <div className="panel-group text-muted">
           {parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}
         </div>
         <div className="search-container">
@@ -206,7 +206,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       <Modal {...modalProps}>
         <PendingInvitations invitations={invites} />
       </Modal>
-    </>
+    </div>
   )
 }
 

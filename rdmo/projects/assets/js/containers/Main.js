@@ -11,14 +11,15 @@ import Projects from '../components/main/Projects'
 const Main = ({ config, configActions, projectsActions, projects, userActions, currentUser }) => {
   if (!isEmpty(projects)) {
       return (
-      <Projects
-        config={config}
-        configActions={configActions}
-        currentUserObject={currentUser}
-        projectsActions={projectsActions}
-        projectsObject={projects}
-        userActions={userActions}
-      />)
+        <Projects
+          config={config}
+          configActions={configActions}
+          currentUserObject={currentUser}
+          projectsActions={projectsActions}
+          projectsObject={projects}
+          userActions={userActions}
+        />
+      )
     }
 
     return null
