@@ -42,7 +42,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
       {isManager && (
         <div className="filter-group">
           <label className="control-label">{gettext('Filter by created date')}</label>
-          <div className="filter-fields-container">
+          <div className="filter-fields-container project-datepicker">
             <DatePicker
               autoComplete="off"
               className="form-control"
@@ -86,7 +86,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
       )}
       <div className="filter-group">
         <label className="control-label">{gettext('Filter by last changed date')}</label>
-        <div className="filter-fields-container">
+        <div className="filter-fields-container project-datepicker">
           <DatePicker
             autoComplete="off"
             className="form-control"

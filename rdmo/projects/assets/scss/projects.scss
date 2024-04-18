@@ -283,7 +283,35 @@ a.disabled {
   margin-bottom: 10px; // Replicates the removed inline style
 }
 
-.react-datepicker__close-icon::after {
+.project-datepicker .react-datepicker {
+  font-size: 1em;
+}
+.project-datepicker .react-datepicker__header {
+  padding-top: 0.8em;
+}
+.project-datepicker .react-datepicker__month {
+  margin: 0.4em 1em;
+}
+.project-datepicker .react-datepicker__day-name, .project-datepicker .react-datepicker__day {
+  width: 1.9em;
+  line-height: 1.9em;
+  margin: 0.166em;
+}
+.project-datepicker .react-datepicker__current-month {
+  font-size: 1em;
+}
+.project-datepicker .react-datepicker__navigation {
+  top: 1em;
+  line-height: 1.7em;
+  border: 0.45em solid transparent;
+}
+.project-datepicker .react-datepicker__navigation--previous {
+  left: 1em;
+}
+.project-datepicker .react-datepicker__navigation--next {
+  right: 1em;
+}
+.project-datepicker .react-datepicker__close-icon::after {
   background-color: #fff;
   color: black;
   font-size: 1.5em;
