@@ -131,7 +131,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   }
 
   return (
-    <div class="projects">
+    <div className="projects">
       <div className="project-header-container">
         <h1>{headline}</h1>
         <div className="icon-container">
