@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { ROLE_LABELS } from '../../utils'
 
 const PendingInvitations = ({ invitations }) => {
   const baseUrl = window.location.origin
@@ -11,7 +12,7 @@ const PendingInvitations = ({ invitations }) => {
             <b>{item.title}</b>
           </div>
           <div className="w-50">
-            {gettext(item.role).charAt(0).toUpperCase() + gettext(item.role).slice(1)}
+            {ROLE_LABELS[item.role]}
           </div>
           <div className="w-25 align-right">
             <button className="btn btn-xs btn-success ml-10" onClick={() => { window.location.href = `${baseUrl}/projects/join/${item.token}` }}>{gettext('Accept')}</button>

@@ -332,3 +332,30 @@ a.disabled {
     outline:0;
   }
 }
+
+.dropzone-container {
+  width: 100%;
+  padding: 20px;
+}
+
+.dropzone {
+  border: 2px dashed #cccccc;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  transition: border .24s ease-in-out;
+}
+
+.dropzone:focus {
+  border-color: #2196f3;
+}
+
+/* Add additional styling for when files are being dragged over the dropzone */
+.dropzone.drag-active {
+  border-color: #2196f3;
+}
+
+/* Add styles for when the dropzone is disabled */
+.dropzone.disabled {
+  opacity: 0.6;
+}

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { PendingInvitations, ProjectFilters, Table } from '../helper'
-import { FileUploadButton, Link, Modal, SearchField } from 'rdmo/core/assets/js/components'
+import { PendingInvitations, ProjectFilters, ProjectImport, Table } from '../helper'
+import { Link, Modal, SearchField } from 'rdmo/core/assets/js/components'
 import { useFormattedDateTime, useModal, useScrollToTop }  from 'rdmo/core/assets/js/hooks'
 import useDatePicker from '../../hooks/useDatePicker'
 import { language } from 'rdmo/core/assets/js/utils'
@@ -14,8 +14,21 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const { myProjects } = config
 
   const { showTopButton, scrollToTop } = useScrollToTop()
-  const { show, open, close } = useModal()
-  const modalProps = {title: gettext('Pending invitations'), show: show, onClose: close }
+
+  const { show: showInvitations, open: openInvitations, close: closeInvitations } = useModal()
+  const { show: showImport, open: openImport, close: closeImport } = useModal()
+
+  const invitationsModalProps = {
+    title: gettext('Pending invitations'),
+    show: showInvitations,
+    onClose: closeInvitations
+  }
+
+  const importModalProps = {
+    title: gettext('Import project'),
+    show: showImport,
+    onClose: closeImport
+  }
 
   const { setStartDate, setEndDate } = useDatePicker()
 
@@ -136,7 +149,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         <h1>{headline}</h1>
         <div className="icon-container">
           {!isEmpty(invites) && myProjects &&
-          <button className="btn btn-link mr-10" onClick={open}>
+          <button className="btn btn-link mr-10" onClick={openInvitations}>
             <span className="badge badge-primary badge-invitations">
               {invites.length}
             </span>
@@ -151,12 +164,9 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
           <button className="btn btn-link mr-10" onClick={handleNew}>
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
-          <FileUploadButton
-            acceptedTypes={allowedTypes}
-            buttonProps={{'className': 'btn btn-link'}}
-            buttonLabel={gettext('Import project')}
-            onImportFile={handleImport}
-          />
+          <button className="btn btn-link mr-10" onClick={openImport}>
+          <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
+          </button>
         </div>
       </div>
       <div className="panel">
@@ -203,8 +213,13 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         sortableColumns={SORTABLE_COLUMNS}
         visibleColumns={visibleColumns}
       />
-      <Modal {...modalProps}>
+      <Modal {...invitationsModalProps}>
         <PendingInvitations invitations={invites} />
+      </Modal>
+      <Modal {...importModalProps}>
+        <ProjectImport
+          allowedTypes={allowedTypes}
+          handleImport={handleImport} />
       </Modal>
     </div>
   )
