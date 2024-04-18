@@ -100,7 +100,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       return rolesString
     },
     owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
-    progress: (_content, row) => row.progress_total ? `${row.progress_count ?? 0} ${gettext('of')} ${row.progress_total}` : null,
+    progress: (_content, row) => row.progress_total ?  interpolate(gettext('%s of %s'), [row.progress_count ?? 0, row.progress_total]) : null,
     created: content => useFormattedDateTime(content, language),
     updated: content => useFormattedDateTime(content, language),
     actions: (_content, row) => {
@@ -161,7 +161,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       </div>
       <div className="panel">
         <div className="panel-group text-muted">
-          {parseInt(displayedRows) > projects.length ? projects.length : displayedRows} {gettext('of')} {projects.length} {gettext('projects are displayed')}
+          {interpolate(gettext('%s of %s projects are displayed'), [parseInt(displayedRows) > projects.length ? projects.length : displayedRows, projects.length])}
         </div>
         <div className="search-container">
           <SearchField

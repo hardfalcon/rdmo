@@ -6,8 +6,8 @@ const getLocaleObject = (language) => {
 }
 
 const FORMAT_STRINGS = {
-  en: 'MMMM d, yyyy, h:mm a',
-  de: 'd. MMMM yyyy, H:mm',
+  en: 'MMM d, yyyy, h:mm a',
+  de: 'd. MMM yyyy, H:mm',
 }
 
 export const useFormattedDateTime  = (date, language) => {

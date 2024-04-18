@@ -28,7 +28,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
   return (
     <div className="filter-container-group">
       <div className="filter-group">
-        <h6>{gettext('Filter by catalog')}</h6>
+        <label className="control-label">{gettext('Filter by catalog')}</label>
         <div className="search-container">
           <Select
             className="select-custom"
@@ -41,7 +41,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
       </div>
       {isManager && (
         <div className="filter-group">
-          <h6>{gettext('Filter by created date')}</h6>
+          <label className="control-label">{gettext('Filter by created date')}</label>
           <div className="filter-fields-container">
             <DatePicker
               autoComplete="off"
@@ -85,7 +85,7 @@ const ProjectFilters = ({ catalogs, config, configActions, isManager, projectsAc
         </div>
       )}
       <div className="filter-group">
-        <h6>{gettext('Filter by last changed date')}</h6>
+        <label className="control-label">{gettext('Filter by last changed date')}</label>
         <div className="filter-fields-container">
           <DatePicker
             autoComplete="off"
