@@ -258,19 +258,18 @@ a.disabled {
   display: flex;
   flex-wrap: wrap;
   gap: 10px; // Provides spacing between filter groups
-  // margin-bottom: 20px;
 
   .filter-group {
     display: flex;
     flex-direction: column;
-    width: calc(33.33% - 10px); // Subtract the gap from the width
+    width: calc(33.33% - 10px);
 
     .filter-fields-container {
       display: flex;
-      gap: 10px; // Spacing between individual filters
+      gap: 10px;
 
       .form-control, .select-custom {
-        width: 100%; // The filters take up the full width of their container
+        width: 100%;
       }
     }
   }

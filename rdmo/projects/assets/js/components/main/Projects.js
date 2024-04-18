@@ -96,8 +96,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const cellFormatters = {
     title: (content, row) => renderTitle(content, row),
     role: (_content, row) => {
-      const arraysToSearch = ['authors', 'guests', 'managers', 'owners']
-      const { rolesString } = getUserRoles(row, currentUserId, arraysToSearch)
+      const { rolesString } = getUserRoles(row, currentUserId)
       return rolesString
     },
     owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
