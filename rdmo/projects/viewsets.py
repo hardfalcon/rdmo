@@ -233,6 +233,15 @@ class ProjectViewSet(ModelViewSet):
     def upload_accept(self, request):
         return Response(get_upload_accept())
 
+    @action(detail=False, permission_classes=(IsAuthenticated, ))
+    def imports(self, request):
+        return Response([{
+            'key': key,
+            'label': label,
+            'class_name': class_name,
+            'href': reverse('project_create_import', args=[key])
+        } for key, label, class_name in settings.PROJECT_IMPORTS if key in settings.PROJECT_IMPORTS_LIST] )
+
     def perform_create(self, serializer):
         project = serializer.save(site=get_current_site(self.request))
 
