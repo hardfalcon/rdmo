@@ -10,7 +10,7 @@ const ProjectImport = ({ allowedTypes, handleImport}) => {
       acceptedTypes={allowedTypes}
       onImportFile={handleImport} />
       <hr />
-      <h2>{gettext('Direct import')}</h2>
+      <h2>{gettext('Import directly')}</h2>
       to do: display links
       </>
   )

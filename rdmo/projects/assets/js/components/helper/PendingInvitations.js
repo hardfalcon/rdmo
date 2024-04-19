@@ -14,7 +14,7 @@ const PendingInvitations = ({ invitations }) => {
           <div className="w-50">
             {ROLE_LABELS[item.role]}
           </div>
-          <div className="w-25 align-right">
+          <div className="w-50 align-right">
             <button className="btn btn-xs btn-success ml-10" onClick={() => { window.location.href = `${baseUrl}/projects/join/${item.token}` }}>{gettext('Accept')}</button>
             <button className="btn btn-xs btn-danger ml-10" onClick={() => { window.location.href = `${baseUrl}/projects/cancel/${item.token}` }}>{gettext('Decline')}</button>
           </div>

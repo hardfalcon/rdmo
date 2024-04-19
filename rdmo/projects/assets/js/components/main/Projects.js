@@ -35,6 +35,12 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   const baseUrl = window.location.origin
   const displayedRows = get(config, 'tableRows', '')
 
+  const displayMessage = interpolate(gettext('%s of %s projects are displayed'), [parseInt(displayedRows) > projects.length ? projects.length : displayedRows, projects.length])
+
+  const getProgressString = (row) => {
+    return (row.progress_total ?  interpolate(gettext('%s of %s'), [row.progress_count ?? 0, row.progress_total]) : null)
+  }
+
   const currentUserId = currentUser.id
   const isManager = userIsManager(currentUser)
 
@@ -113,7 +119,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       return rolesString
     },
     owner: (_content, row) => row.owners.map(owner => `${owner.first_name} ${owner.last_name}`).join('; '),
-    progress: (_content, row) => row.progress_total ?  interpolate(gettext('%s of %s'), [row.progress_count ?? 0, row.progress_total]) : null,
+    progress: (_content, row) => getProgressString(row),
     created: content => useFormattedDateTime(content, language),
     updated: content => useFormattedDateTime(content, language),
     actions: (_content, row) => {
@@ -171,7 +177,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       </div>
       <div className="panel">
         <div className="panel-group text-muted">
-          {interpolate(gettext('%s of %s projects are displayed'), [parseInt(displayedRows) > projects.length ? projects.length : displayedRows, projects.length])}
+          {displayMessage}
         </div>
         <div className="search-container">
           <SearchField

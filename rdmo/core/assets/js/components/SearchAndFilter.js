@@ -39,7 +39,7 @@ const SearchField = ({ value, onChange, onSearch, placeholder }) => {
             <span className="fa fa-times"></span>
           </button>
           <button className="btn btn-primary" onClick={handleSearch}>
-            Search
+            {gettext('Search')}
           </button>
         </span>
       </div>
@@ -57,7 +57,6 @@ SearchField.propTypes = {
 const Select = ({ options, onChange, placeholder, value }) => {
   const selectedOption = options.find(option => option.value === value) || null
   const handleChange = (selected) => {
-    console.log('Handle Change:', selected)
     onChange(selected ? selected.value : null)
   }
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RDMO\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-09 10:41+0100\n"
+"POT-Creation-Date: 2024-04-19 14:37+0200\n"
 "PO-Revision-Date: 2023-12-09 10:43+0100\n"
 "Last-Translator: Yonny Cardenas <cardenas@cc.in2p3.fr>\n"
 "Language-Team: RDMO <cardenas@cc.in2p3.fr>\n"
@@ -12,6 +12,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
+
+#: core/assets/js/components/Modal.js:16
+#: management/assets/js/components/common/Modals.js:16
+msgid "Close"
+msgstr "Fermer"
+
+#: core/assets/js/components/Modal.js:20
+#: management/assets/js/components/common/Buttons.js:19
+msgid "Save"
+msgstr "Enregistrer"
+
+#: core/assets/js/components/SearchAndFilter.js:42
+#: projects/assets/js/utils/labels.js:14
+msgid "Search"
+msgstr ""
+
+#: core/assets/js/components/UploadDropZone.js:18
+#, javascript-format
+msgid "%s has unsupported file type"
+msgstr ""
+
+#: core/assets/js/components/UploadDropZone.js:26
+msgid "Drag and drop a file here or click to select a file"
+msgstr ""
 
 #: management/assets/js/components/common/Buttons.js:6
 #: management/assets/js/components/sidebar/ImportSidebar.js:27
@@ -34,10 +58,6 @@ msgstr "Copie"
 #: management/assets/js/components/common/Buttons.js:16
 msgid "Copy and continue editing"
 msgstr "Copier et poursuivre l'édition"
-
-#: management/assets/js/components/common/Buttons.js:19
-msgid "Save"
-msgstr "Enregistrer"
 
 #: management/assets/js/components/common/Buttons.js:19
 msgid "Save and continue editing"
@@ -88,10 +108,6 @@ msgstr "XML"
 msgid "XML (full)"
 msgstr "XML (complet)"
 
-#: management/assets/js/components/common/Modals.js:16
-msgid "Close"
-msgstr "Fermer"
-
 #: management/assets/js/components/edit/EditAttribute.js:37
 #: management/assets/js/components/element/Attribute.js:31
 msgid "This attribute is read only"
@@ -101,7 +117,6 @@ msgstr "Cet attribut est en lecture seule"
 #: management/assets/js/components/element/Attribute.js:44
 #: management/assets/js/components/import/ImportAttribute.js:28
 #: management/assets/js/constants/elements.js:49
-#: management/static/management/js/management.js:2
 msgid "Attribute"
 msgstr "Attribut"
 
@@ -112,8 +127,8 @@ msgstr "Créer un nouvel attribut"
 #: management/assets/js/components/edit/EditAttribute.js:53
 #, javascript-format
 msgid ""
-"This attribute will be added to the attribute <code class=\"code-domain\">"
-"%s</code>."
+"This attribute will be added to the attribute <code class=\"code-"
+"domain\">%s</code>."
 msgstr ""
 "Cet attribut sera ajouté à l'attribut <code class=\"code-domain\">%s</code>."
 
@@ -130,8 +145,8 @@ msgstr ""
 #: management/assets/js/components/edit/EditAttribute.js:82
 #, javascript-format
 msgid ""
-"This attribute will be added to the condition <code class=\"code-conditions"
-"\">%s</code>."
+"This attribute will be added to the condition <code class=\"code-"
+"conditions\">%s</code>."
 msgstr ""
 "Cet attribut sera ajouté à la condition <code class=\"code-conditions\">%s</"
 "code>."
@@ -153,7 +168,6 @@ msgstr "Ce catalogue est en lecture seule"
 #: management/assets/js/components/element/Catalog.js:51
 #: management/assets/js/components/import/ImportCatalog.js:30
 #: management/assets/js/constants/elements.js:44
-#: management/static/management/js/management.js:2
 msgid "Catalog"
 msgstr "Catalogue"
 
@@ -170,7 +184,6 @@ msgstr "Cette condition est en lecture seule"
 #: management/assets/js/components/element/Condition.js:37
 #: management/assets/js/components/import/ImportCondition.js:28
 #: management/assets/js/constants/elements.js:52
-#: management/static/management/js/management.js:2
 msgid "Condition"
 msgstr "État"
 
@@ -181,11 +194,11 @@ msgstr "Créer une nouvelle condition"
 #: management/assets/js/components/edit/EditCondition.js:57
 #, javascript-format
 msgid ""
-"This condition will be added to the option set <code class=\"code-options\">"
-"%s</code>."
+"This condition will be added to the option set <code class=\"code-"
+"options\">%s</code>."
 msgstr ""
-"Cette condition sera ajoutée au jeu d'options <code class=\"code-options\">"
-"%s</code>."
+"Cette condition sera ajoutée au jeu d'options <code class=\"code-"
+"options\">%s</code>."
 
 #: management/assets/js/components/edit/EditCondition.js:64
 #, javascript-format
@@ -199,8 +212,8 @@ msgstr ""
 #: management/assets/js/components/edit/EditCondition.js:71
 #, javascript-format
 msgid ""
-"This condition will be added to the question set <code class=\"code-questions"
-"\">%s</code>."
+"This condition will be added to the question set <code class=\"code-"
+"questions\">%s</code>."
 msgstr ""
 "Cette condition sera ajoutée à l'ensemble de questions <code class=\"code-"
 "questions\">%s</code>."
@@ -208,11 +221,11 @@ msgstr ""
 #: management/assets/js/components/edit/EditCondition.js:78
 #, javascript-format
 msgid ""
-"This condition will be added to the question <code class=\"code-questions\">"
-"%s</code>."
+"This condition will be added to the question <code class=\"code-"
+"questions\">%s</code>."
 msgstr ""
-"Cette condition sera ajoutée à la question <code class=\"code-questions\">"
-"%s</code>."
+"Cette condition sera ajoutée à la question <code class=\"code-"
+"questions\">%s</code>."
 
 #: management/assets/js/components/edit/EditCondition.js:85
 #, javascript-format
@@ -235,7 +248,6 @@ msgstr "Cette option est en lecture seule"
 #: management/assets/js/components/element/Option.js:37
 #: management/assets/js/components/import/ImportOption.js:28
 #: management/assets/js/constants/elements.js:51
-#: management/static/management/js/management.js:2
 msgid "Option"
 msgstr "Option"
 
@@ -261,7 +273,6 @@ msgstr "Cet ensemble d'options est en lecture seule"
 #: management/assets/js/components/element/OptionSet.js:43
 #: management/assets/js/components/import/ImportOptionSet.js:28
 #: management/assets/js/constants/elements.js:50
-#: management/static/management/js/management.js:2
 msgid "Option set"
 msgstr "Jeu d'options"
 
@@ -272,11 +283,11 @@ msgstr "Créer un nouveau jeu d'options"
 #: management/assets/js/components/edit/EditOptionSet.js:61
 #, javascript-format
 msgid ""
-"This option set will be added to the question <code class=\"code-questions\">"
-"%s</code>."
+"This option set will be added to the question <code class=\"code-"
+"questions\">%s</code>."
 msgstr ""
-"Cet ensemble d'options sera ajouté à la question <code class=\"code-questions"
-"\">%s</code>."
+"Cet ensemble d'options sera ajouté à la question <code class=\"code-"
+"questions\">%s</code>."
 
 #: management/assets/js/components/edit/EditOptionSet.js:99
 msgid "Add existing option"
@@ -330,7 +341,6 @@ msgstr "Cette page est en lecture seule"
 #: management/assets/js/components/element/Page.js:57
 #: management/assets/js/components/import/ImportPage.js:28
 #: management/assets/js/constants/elements.js:46
-#: management/static/management/js/management.js:2
 msgid "Page"
 msgstr "Page"
 
@@ -356,7 +366,6 @@ msgstr "Cette question est en lecture seule"
 #: management/assets/js/components/element/Question.js:44
 #: management/assets/js/components/import/ImportQuestion.js:28
 #: management/assets/js/constants/elements.js:48
-#: management/static/management/js/management.js:2
 msgid "Question"
 msgstr "Question"
 
@@ -376,8 +385,8 @@ msgstr ""
 #: management/assets/js/components/edit/EditQuestion.js:70
 #, javascript-format
 msgid ""
-"This question will be added to the question set <code class=\"code-questions"
-"\">%s</code>."
+"This question will be added to the question set <code class=\"code-"
+"questions\">%s</code>."
 msgstr ""
 "Cette question sera ajoutée à l'ensemble de questions <code class=\"code-"
 "questions\">%s</code>."
@@ -391,7 +400,6 @@ msgstr "Cet ensemble de questions est en lecture seule"
 #: management/assets/js/components/element/QuestionSet.js:56
 #: management/assets/js/components/import/ImportQuestionSet.js:28
 #: management/assets/js/constants/elements.js:47
-#: management/static/management/js/management.js:2
 msgid "Question set"
 msgstr "Ensemble de questions"
 
@@ -402,11 +410,11 @@ msgstr "Créer une série de questions"
 #: management/assets/js/components/edit/EditQuestionSet.js:96
 #, javascript-format
 msgid ""
-"This question set will be added to the page <code class=\"code-questions\">"
-"%s</code>."
+"This question set will be added to the page <code class=\"code-"
+"questions\">%s</code>."
 msgstr ""
-"Cet ensemble de questions sera ajouté à la page <code class=\"code-questions"
-"\">%s</code>."
+"Cet ensemble de questions sera ajouté à la page <code class=\"code-"
+"questions\">%s</code>."
 
 #: management/assets/js/components/edit/EditQuestionSet.js:103
 #, javascript-format
@@ -414,8 +422,8 @@ msgid ""
 "This question set will be added to the question set <code class=\"code-"
 "questions\">%s</code>."
 msgstr ""
-"Cet ensemble de questions sera ajouté à l'ensemble de questions <code class="
-"\"code-questions\">%s</code>."
+"Cet ensemble de questions sera ajouté à l'ensemble de questions <code "
+"class=\"code-questions\">%s</code>."
 
 #: management/assets/js/components/edit/EditSection.js:38
 msgid "Add existing page"
@@ -434,7 +442,6 @@ msgstr "Cette section est en lecture seule"
 #: management/assets/js/components/element/Section.js:54
 #: management/assets/js/components/import/ImportSection.js:28
 #: management/assets/js/constants/elements.js:45
-#: management/static/management/js/management.js:2
 msgid "Section"
 msgstr "Section"
 
@@ -460,7 +467,6 @@ msgstr "Cette tâche est en lecture seule"
 #: management/assets/js/components/element/Task.js:45
 #: management/assets/js/components/import/ImportTask.js:30
 #: management/assets/js/constants/elements.js:53
-#: management/static/management/js/management.js:2
 msgid "Task"
 msgstr "Tâche"
 
@@ -477,7 +483,6 @@ msgstr "Cette vue est en lecture seule"
 #: management/assets/js/components/element/View.js:42
 #: management/assets/js/components/import/ImportView.js:30
 #: management/assets/js/constants/elements.js:54
-#: management/static/management/js/management.js:2
 msgid "View"
 msgstr "Vue"
 
@@ -1353,6 +1358,179 @@ msgstr "Désélectionner tout"
 #: management/assets/js/components/sidebar/ImportSidebar.js:75
 msgid "Set URI prefix for all elements"
 msgstr "Définir le préfixe URI pour tous les éléments"
+
+#: projects/assets/js/components/helper/ProjectFilters.js:31
+#, fuzzy
+#| msgid "Filter catalogs"
+msgid "Filter by catalog"
+msgstr "Catalogues de filtres"
+
+#: projects/assets/js/components/helper/ProjectFilters.js:37
+#, fuzzy
+#| msgid "Delete catalog"
+msgid "Select catalog"
+msgstr "Supprimer le catalogue"
+
+#: projects/assets/js/components/helper/ProjectFilters.js:44
+msgid "Filter by created date"
+msgstr ""
+
+#: projects/assets/js/components/helper/ProjectFilters.js:62
+#: projects/assets/js/components/helper/ProjectFilters.js:106
+msgid "Select start date"
+msgstr ""
+
+#: projects/assets/js/components/helper/ProjectFilters.js:81
+#: projects/assets/js/components/helper/ProjectFilters.js:125
+#, fuzzy
+#| msgid "Select all"
+msgid "Select end date"
+msgstr "Tout sélectionner"
+
+#: projects/assets/js/components/helper/ProjectFilters.js:88
+msgid "Filter by last changed date"
+msgstr ""
+
+#: projects/assets/js/components/helper/ProjectImport.js:13
+#, fuzzy
+#| msgid "Import one element"
+#| msgid_plural "Import %s elements"
+msgid "Import directly"
+msgstr "Importer un élément"
+
+#: projects/assets/js/components/helper/Table.js:52
+msgid "Scroll to top"
+msgstr ""
+
+#: projects/assets/js/components/main/Projects.js:37
+#, javascript-format
+msgid "%s of %s projects are displayed"
+msgstr ""
+
+#: projects/assets/js/components/main/Projects.js:40
+#, javascript-format
+msgid "%s of %s"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:6
+msgid "Name"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:7
+msgid "Role"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:8
+#: projects/assets/js/utils/constants.js:19
+msgid "Owner"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:9
+msgid "Progress"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:10
+#, fuzzy
+#| msgid "Create"
+msgid "Created"
+msgstr "Créer"
+
+#: projects/assets/js/utils/constants.js:11
+msgid "Last changed"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:16
+msgid "Author"
+msgstr ""
+
+#: projects/assets/js/utils/constants.js:17
+#, fuzzy
+#| msgid "Question"
+msgid "Guest"
+msgstr "Question"
+
+#: projects/assets/js/utils/constants.js:18
+msgid "Manager"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:2
+msgid "Accept"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:3
+#, fuzzy
+#| msgid "All editors"
+msgid "All projects"
+msgstr "Tous les éditeurs"
+
+#: projects/assets/js/utils/labels.js:4
+msgid "Decline"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:5
+#, fuzzy
+#| msgid "Filter pages"
+msgid "Filter"
+msgstr "Pages filtres"
+
+#: projects/assets/js/utils/labels.js:6
+#, fuzzy
+#| msgid "Hide elements"
+msgid "Hide filters"
+msgstr "Cacher des éléments"
+
+#: projects/assets/js/utils/labels.js:7
+#, fuzzy
+#| msgid "Import one element"
+#| msgid_plural "Import %s elements"
+msgid "Import project"
+msgstr "Importer un élément"
+
+#: projects/assets/js/utils/labels.js:8
+msgid "Load all"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:9
+msgid "Load more"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:10
+msgid "My projects"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:11
+#, fuzzy
+#| msgid "All editors"
+msgid "New project"
+msgstr "Tous les éditeurs"
+
+#: projects/assets/js/utils/labels.js:12
+msgid "Pending invitations"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:13
+msgid "Reset all filters"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:15
+#, fuzzy
+#| msgid "All editors"
+msgid "Search projects"
+msgstr "Tous les éditeurs"
+
+#: projects/assets/js/utils/labels.js:16
+#, fuzzy
+#| msgid "Show elements"
+msgid "Show filters"
+msgstr "Afficher les éléments"
+
+#: projects/assets/js/utils/labels.js:17
+msgid "View all projects"
+msgstr ""
+
+#: projects/assets/js/utils/labels.js:18
+msgid "View my projects"
+msgstr ""
 
 #~ msgid "attribute"
 #~ msgstr "attribut"
