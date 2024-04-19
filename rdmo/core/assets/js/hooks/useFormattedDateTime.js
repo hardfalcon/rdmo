@@ -1,8 +1,8 @@
 import { format } from 'date-fns'
-import { de, en } from 'date-fns/locale'
+import { de, enUS } from 'date-fns/locale'
 
 const getLocaleObject = (language) => {
-  return language === 'de' ? de : en
+  return language === 'de' ? de : enUS
 }
 
 const FORMAT_STRINGS = {
