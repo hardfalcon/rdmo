@@ -25,33 +25,26 @@ class ProjectsApi extends BaseApi {
     })
   }
 
-  // static fetchAllowedFileTypes() {
-  //   return fetch('/api/v1/projects/projects/upload-accept/')
-  //     .then(response => {
-  //       if (response.ok) {
-  //         return response.json()
-  //       } else {
-  //         throw new Error(response.statusText)
-  //       }
-  //     })
-  //     .then(text => {
-  //       return text.split(',')
-  //     })
-  // }
-
   static fetchAllowedFileTypes() {
     return fetch('/api/v1/projects/projects/upload-accept/')
       .then(response => {
         if (response.ok) {
-          return response.text() // Use .text() instead of .json()
+          return response.text()
             .then(text => {
-              // Check if the response text is not empty before trying to parse it
-              if (text) {
-                return text.split(',')
-              } else {
-                // Handle the case where there is no response body
-                return [] // Return an empty array or any other appropriate default value
+              try {
+                // Attempt to parse the text as JSON
+                const jsonData = JSON.parse(text)
+                // Check if the parsed data is an array
+                if (Array.isArray(jsonData)) {
+                  return jsonData
+                }
+              } catch (error) {
+                // If JSON.parse fails, handle text as plain string below
               }
+
+              // If it's not a JSON array, process it as a string
+              const cleanedText = text.replace(/^"|"$/g, '')
+              return cleanedText ? cleanedText.split(',') : []
             })
         } else {
           throw new Error(response.statusText)
