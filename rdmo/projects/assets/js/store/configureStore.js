@@ -65,6 +65,7 @@ export default function configureStore() {
       store.dispatch(projectsActions.fetchInvitations(currentUser.id))
       store.dispatch(projectsActions.fetchCatalogs())
       store.dispatch(projectsActions.fetchAllowedFileTypes())
+      store.dispatch(projectsActions.fetchImportUrls())
     })
   })
 

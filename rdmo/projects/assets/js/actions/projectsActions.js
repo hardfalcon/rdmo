@@ -3,6 +3,7 @@ import { FETCH_PROJECTS_ERROR, FETCH_PROJECTS_INIT, FETCH_PROJECTS_SUCCESS,
          FETCH_INVITATIONS_ERROR, FETCH_INVITATIONS_INIT, FETCH_INVITATIONS_SUCCESS,
          FETCH_CATALOGS_ERROR, FETCH_CATALOGS_INIT, FETCH_CATALOGS_SUCCESS,
          FETCH_FILETYPES_ERROR, FETCH_FILETYPES_INIT, FETCH_FILETYPES_SUCCESS,
+         FETCH_IMPORT_URLS_ERROR, FETCH_IMPORT_URLS_INIT, FETCH_IMPORT_URLS_SUCCESS,
          UPLOAD_PROJECT_ERROR, UPLOAD_PROJECT_INIT, UPLOAD_PROJECT_SUCCESS }
          from './types'
 
@@ -77,6 +78,30 @@ export function fetchAllowedFileTypesSuccess(allowedTypes) {
 
 export function fetchAllowedFileTypesError(error) {
   return {type: FETCH_FILETYPES_ERROR, error}
+}
+
+export function fetchImportUrls() {
+  return function(dispatch) {
+    dispatch(fetchImportUrlsInit())
+    const action = (dispatch) => ProjectsApi.fetchDirectImportUrls()
+          .then(importUrls => {
+            dispatch(fettchImportUrlsSuccess({ importUrls }))})
+
+    return dispatch(action)
+      .catch(error => dispatch(fetchImportUrlsError(error)))
+  }
+}
+
+export function fetchImportUrlsInit() {
+  return {type: FETCH_IMPORT_URLS_INIT}
+}
+
+export function fettchImportUrlsSuccess(importUrls) {
+  return {type: FETCH_IMPORT_URLS_SUCCESS, importUrls }
+}
+
+export function fetchImportUrlsError(error) {
+  return {type: FETCH_IMPORT_URLS_ERROR, error}
 }
 
 export function fetchInvitations() {

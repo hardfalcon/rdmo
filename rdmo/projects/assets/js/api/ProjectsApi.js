@@ -52,6 +52,17 @@ class ProjectsApi extends BaseApi {
       })
   }
 
+  static fetchDirectImportUrls() {
+    return fetch('/api/v1/projects/projects/imports/')
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw new Error(response.statusText)
+        }
+      })
+  }
+
   static fetchInvites() {
     return fetch('/api/v1/projects/invites/user')
       .then(response => {

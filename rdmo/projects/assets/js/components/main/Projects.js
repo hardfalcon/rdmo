@@ -9,7 +9,8 @@ import { getTitlePath, getUserRoles, userIsManager, HEADER_FORMATTERS, SORTABLE_
 import { get, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
-  const { allowedTypes, catalogs, invites, projects } = projectsObject
+  const { allowedTypes, catalogs, importUrls, invites, projects } = projectsObject
+  console.log('importUrls', importUrls)
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
@@ -32,7 +33,6 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   const { setStartDate, setEndDate } = useDatePicker()
 
-  const baseUrl = window.location.origin
   const displayedRows = get(config, 'tableRows', '')
 
   const displayMessage = interpolate(gettext('%s of %s projects are displayed'), [parseInt(displayedRows) > projects.length ? projects.length : displayedRows, projects.length])
@@ -62,7 +62,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
   }
 
   const handleNew = () => {
-    window.location.href = `${baseUrl}/projects/create`
+    window.location.href = '/projects/create'
   }
 
   const handleImport = (file) => { projectsActions.uploadProject('/projects/import/', file) }
@@ -75,7 +75,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
     return (
       <div>
-        <a href={`${baseUrl}/projects/${row.id}`}>
+        <a href={`/projects/${row.id}`}>
           {pathArray.map((path, index) => (
             <span key={index}>{path} / </span>
           ))}
@@ -123,7 +123,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
     created: content => useFormattedDateTime(content, language),
     updated: content => useFormattedDateTime(content, language),
     actions: (_content, row) => {
-      const rowUrl = `${baseUrl}/projects/${row.id}`
+      const rowUrl = `/projects/${row.id}`
       const path = `?next=${window.location.pathname}`
       const { isProjectManager, isProjectOwner } = getUserRoles(row, currentUserId, ['managers', 'owners'])
       return (
@@ -225,7 +225,8 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
       <Modal {...importModalProps}>
         <ProjectImport
           allowedTypes={allowedTypes}
-          handleImport={handleImport} />
+          handleImport={handleImport}
+          importUrls={importUrls} />
       </Modal>
     </div>
   )
