@@ -56,10 +56,10 @@ const Table = ({
             {displayedRows < data.length &&
             <>
             <button onClick={loadMore} className="elliptic-button">
-              {gettext('Load More')}
+              {gettext('Load more')}
             </button>
             <button onClick={loadAll} className="elliptic-button">
-              {gettext('Load All')}
+              {gettext('Load all')}
             </button>
             </>
             }

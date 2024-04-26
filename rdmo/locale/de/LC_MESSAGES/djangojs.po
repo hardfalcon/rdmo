@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RDMO\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-19 14:37+0200\n"
-"PO-Revision-Date: 2024-04-19 14:25+0200\n"
+"POT-Creation-Date: 2024-04-26 16:24+0200\n"
+"PO-Revision-Date: 2024-04-26 16:26+0200\n"
 "Last-Translator: Jochen Klar <jklar@aip.de>\n"
 "Language-Team: RDMO <rdmo-team@listserv.dfn.de>\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgid "Save"
 msgstr "Speichern"
 
 #: core/assets/js/components/SearchAndFilter.js:42
-#: projects/assets/js/utils/labels.js:14
+#: projects/assets/js/utils/translations.js:15
 msgid "Search"
 msgstr "Suchen"
 
@@ -1390,23 +1390,68 @@ msgstr "Enddatum wählen"
 msgid "Filter by last changed date"
 msgstr "Nach Änderungsdatum filtern"
 
-#: projects/assets/js/components/helper/ProjectImport.js:13
+#: projects/assets/js/components/helper/ProjectImport.js:12
 msgid "Import directly"
 msgstr "Projekt direkt importieren"
+
+#: projects/assets/js/components/helper/ProjectImport.js:28
+#: projects/assets/js/utils/translations.js:8
+msgid "Import from file"
+msgstr "Importieren aus Datei"
 
 #: projects/assets/js/components/helper/Table.js:52
 msgid "Scroll to top"
 msgstr "Zum Seitenanfang"
 
-#: projects/assets/js/components/main/Projects.js:37
+#: projects/assets/js/components/helper/Table.js:59
+#: projects/assets/js/utils/translations.js:10
+msgid "Load more"
+msgstr "Mehr laden"
+
+#: projects/assets/js/components/helper/Table.js:62
+#: projects/assets/js/utils/translations.js:9
+msgid "Load all"
+msgstr "Alles laden"
+
+#: projects/assets/js/components/main/Projects.js:23
+#: projects/assets/js/utils/translations.js:13
+msgid "Pending invitations"
+msgstr "Ausstehende Einladungen"
+
+#: projects/assets/js/components/main/Projects.js:29
+#: projects/assets/js/utils/translations.js:7
+msgid "Import project"
+msgstr "Projekt importieren"
+
+#: projects/assets/js/components/main/Projects.js:38
 #, javascript-format
 msgid "%s of %s projects are displayed"
 msgstr "%s von %s Projekten werden angezeigt"
 
-#: projects/assets/js/components/main/Projects.js:40
+#: projects/assets/js/components/main/Projects.js:41
 #, javascript-format
 msgid "%s of %s"
 msgstr "%s von %s"
+
+#: projects/assets/js/components/main/Projects.js:55
+#: projects/assets/js/utils/translations.js:18
+msgid "View all projects"
+msgstr "Alle Projekte ansehen"
+
+#: projects/assets/js/components/main/Projects.js:55
+#: projects/assets/js/utils/translations.js:19
+msgid "View my projects"
+msgstr "Meine Projekte ansehen"
+
+#: projects/assets/js/components/main/Projects.js:56
+#: projects/assets/js/utils/translations.js:11
+msgid "My projects"
+msgstr "Meine Projekte"
+
+#: projects/assets/js/components/main/Projects.js:56
+#: projects/assets/js/utils/translations.js:3
+msgid "All projects"
+msgstr "Alle Projekte"
 
 #: projects/assets/js/utils/constants.js:6
 msgid "Name"
@@ -1445,73 +1490,47 @@ msgstr "Gast"
 msgid "Manager"
 msgstr "Manager"
 
-#: projects/assets/js/utils/labels.js:2
+#: projects/assets/js/utils/translations.js:2
 msgid "Accept"
 msgstr "Akzeptieren"
 
-#: projects/assets/js/utils/labels.js:3
-msgid "All projects"
-msgstr "Alle Projekte"
-
-#: projects/assets/js/utils/labels.js:4
+#: projects/assets/js/utils/translations.js:4
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: projects/assets/js/utils/labels.js:5
+#: projects/assets/js/utils/translations.js:5
 msgid "Filter"
 msgstr "Filter"
 
-#: projects/assets/js/utils/labels.js:6
+#: projects/assets/js/utils/translations.js:6
 msgid "Hide filters"
 msgstr "Filter ausblenden"
 
-#: projects/assets/js/utils/labels.js:7
-msgid "Import project"
-msgstr "Projekt importieren"
-
-#: projects/assets/js/utils/labels.js:8
-#, fuzzy
-#| msgid "Load All"
-msgid "Load all"
-msgstr "Alles laden"
-
-#: projects/assets/js/utils/labels.js:9
-#, fuzzy
-#| msgid "Load More"
-msgid "Load more"
-msgstr "Mehr laden"
-
-#: projects/assets/js/utils/labels.js:10
-msgid "My projects"
-msgstr "Meine Projekte"
-
-#: projects/assets/js/utils/labels.js:11
+#: projects/assets/js/utils/translations.js:12
 msgid "New project"
 msgstr "Neues Projekt"
 
-#: projects/assets/js/utils/labels.js:12
-msgid "Pending invitations"
-msgstr "Ausstehende Einladungen"
-
-#: projects/assets/js/utils/labels.js:13
+#: projects/assets/js/utils/translations.js:14
 msgid "Reset all filters"
 msgstr "Alle Filter zurücksetzen"
 
-#: projects/assets/js/utils/labels.js:15
+#: projects/assets/js/utils/translations.js:16
 msgid "Search projects"
 msgstr "Projekte durchsuchen"
 
-#: projects/assets/js/utils/labels.js:16
+#: projects/assets/js/utils/translations.js:17
 msgid "Show filters"
 msgstr "Filter anzeigen"
 
-#: projects/assets/js/utils/labels.js:17
-msgid "View all projects"
-msgstr "Alle Projekte ansehen"
+#, fuzzy
+#~| msgid "Load More"
+#~ msgid "Load More"
+#~ msgstr "Mehr laden"
 
-#: projects/assets/js/utils/labels.js:18
-msgid "View my projects"
-msgstr "Meine Projekte ansehen"
+#, fuzzy
+#~| msgid "Load All"
+#~ msgid "Load All"
+#~ msgstr "Alles laden"
 
 #, fuzzy
 #~ msgid "Direct import"
