@@ -23,7 +23,9 @@ const UploadDropZone = ({ acceptedTypes, onImportFile }) => {
     <section className="dropzone-container">
       <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()} />
-        <p>{gettext('Drag and drop a file here or click to select a file')}</p>
+        <p className="mb-0">
+          {gettext('Drag and drop a file here or click to select a file')}
+        </p>
         {errorMessage && <div className="alert alert-danger mt-2">{errorMessage}</div>}
       </div>
     </section>

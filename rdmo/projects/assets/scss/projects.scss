@@ -176,19 +176,42 @@ a.disabled {
     }
 }
 
-.import-buttons {
-    display: flex;
-    gap: 5px;
+.projects-header-container {
+    @media (min-width: $screen-sm-max) {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
 
-    .btn:first-child {
-        flex: 1;
+        margin-bottom: 10px;
+    }
+
+    .projects-header-buttons {
+        display: flex;
+        gap: 20px;
+
+        .btn.btn-link {
+            padding: 0;
+            padding-bottom: 10px
+        }
     }
 }
 
 .icon-container {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.projects {
+    min-height: 600px;
+}
+
+.projects-form {
+    margin-bottom: 40px;
+}
+
+.panel-filters {
+    border-color: #ccc;
 }
 
 .projects-search {
@@ -241,77 +264,43 @@ a.disabled {
   margin-bottom: 10px;
 }
 
-.panel {
-  border: none;
-  box-shadow: none;
-}
-
 .search-container {
   width: 100%;
-  margin-bottom: 10px;
 
   .search-field {
     width: 100%;
   }
 }
 
-.filter-container-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px; // Provides spacing between filter groups
-
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    width: calc(33.33% - 10px);
-
-    .filter-fields-container {
-      display: flex;
-      gap: 10px;
-
-      .form-control, .select-custom {
-        width: 100%;
-      }
-    }
-  }
-}
-
-.project-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  margin-bottom: 10px; // Replicates the removed inline style
-}
-
-.project-datepicker .react-datepicker {
+.projects-datepicker .react-datepicker {
   font-size: 1em;
 }
-.project-datepicker .react-datepicker__header {
+.projects-datepicker .react-datepicker__header {
   padding-top: 0.8em;
 }
-.project-datepicker .react-datepicker__month {
+.projects-datepicker .react-datepicker__month {
   margin: 0.4em 1em;
 }
-.project-datepicker .react-datepicker__day-name, .project-datepicker .react-datepicker__day {
+.projects-datepicker .react-datepicker__day-name, .projects-datepicker .react-datepicker__day {
   width: 1.9em;
   line-height: 1.9em;
   margin: 0.166em;
 }
-.project-datepicker .react-datepicker__current-month {
+.projects-datepicker .react-datepicker__current-month {
   font-size: 1em;
 }
-.project-datepicker .react-datepicker__navigation {
+.projects-datepicker .react-datepicker__navigation {
   top: 1em;
   line-height: 1.7em;
   border: 0.45em solid transparent;
 }
-.project-datepicker .react-datepicker__navigation--previous {
+.projects-datepicker .react-datepicker__navigation--previous {
   left: 1em;
 }
-.project-datepicker .react-datepicker__navigation--next {
+.projects-datepicker .react-datepicker__navigation--next {
   right: 1em;
 }
-.project-datepicker .react-datepicker__close-icon::after {
+.projects-datepicker .react-datepicker__close-icon::after {
   background-color: #fff;
   color: black;
   font-size: 1.5em;
@@ -335,7 +324,7 @@ a.disabled {
 
 .dropzone-container {
   width: 100%;
-  padding: 20px;
+  padding: 10px;
 }
 
 .dropzone {

@@ -29,28 +29,28 @@ export default function configureStore() {
     applyMiddleware(...middlewares)
   )
 
-    // load: restore the config from the local storage
-    const updateConfigFromLocalStorage = () => {
-      const ls = {...localStorage}
+  // load: restore the config from the local storage
+  const updateConfigFromLocalStorage = () => {
+    const ls = {...localStorage}
 
-      Object.entries(ls).forEach(([lsPath, lsValue]) => {
-        if (lsPath.startsWith('rdmo.projects.config.')) {
-          const path = lsPath.replace('rdmo.projects.config.', '')
-          let value
-          switch(lsValue) {
-            case 'true':
-              value = true
-              break
-            case 'false':
-              value = false
-              break
-            default:
-              value = lsValue
-          }
-          store.dispatch(configActions.updateConfig(path, value))
+    Object.entries(ls).forEach(([lsPath, lsValue]) => {
+      if (lsPath.startsWith('rdmo.projects.config.')) {
+        const path = lsPath.replace('rdmo.projects.config.', '')
+        let value
+        switch(lsValue) {
+          case 'true':
+            value = true
+            break
+          case 'false':
+            value = false
+            break
+          default:
+            value = lsValue
         }
-      })
-    }
+        store.dispatch(configActions.updateConfig(path, value))
+      }
+    })
+  }
 
   window.addEventListener('load', () => {
     updateConfigFromLocalStorage()

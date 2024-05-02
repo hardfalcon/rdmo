@@ -7,10 +7,9 @@ const ProjectImport = ({ allowedTypes, handleImport, importUrls}) => {
 
   const renderDirectImportLinks = () => {
     return (
-      <div>
-        <hr />
+      <div className="mt-10">
         <label className="control-label">{gettext('Import directly')}</label>
-        <ul className='list-unstyled'>
+        <ul className='list-unstyled mb-0'>
         {importUrls.map((url) => (
           <li key={url.key}>
             <a href={url.href} target='_blank' rel='noopener noreferrer'>
@@ -25,11 +24,11 @@ const ProjectImport = ({ allowedTypes, handleImport, importUrls}) => {
 
   return (
     <>
-    <label className="control-label">{gettext('Import from file')}</label>
-    <UploadDropZone
-      acceptedTypes={allowedTypes}
-      onImportFile={handleImport} />
-    {importUrls.length > 0 && renderDirectImportLinks()}
+      <label className="control-label">{gettext('Import from file')}</label>
+      <UploadDropZone
+        acceptedTypes={allowedTypes}
+        onImportFile={handleImport} />
+        {importUrls.length > 0 && renderDirectImportLinks()}
     </>
   )
 }

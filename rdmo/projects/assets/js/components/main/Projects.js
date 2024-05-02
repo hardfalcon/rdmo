@@ -10,7 +10,7 @@ import { get, isEmpty } from 'lodash'
 
 const Projects = ({ config, configActions, currentUserObject, projectsActions, projectsObject }) => {
   const { allowedTypes, catalogs, importUrls, invites, projects } = projectsObject
-  console.log('importUrls', importUrls)
+
   const { currentUser } = currentUserObject
   const { myProjects } = config
 
@@ -151,32 +151,36 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
 
   return (
     <div className="projects">
-      <div className="project-header-container">
+      <div className="projects-header-container">
         <h1>{headline}</h1>
-        <div className="icon-container">
-          {!isEmpty(invites) && myProjects &&
-          <button className="btn btn-link mr-10" onClick={openInvitations}>
-            <span className="badge badge-primary badge-invitations">
-              {invites.length}
-            </span>
-            {gettext('Pending invitations')}
-          </button>
+        <div className="projects-header-buttons">
+          {
+            !isEmpty(invites) && myProjects && (
+              <button className="btn btn-link" onClick={openInvitations}>
+                <span className="badge badge-primary badge-invitations">
+                  {invites.length}
+                </span>
+                {gettext('Pending invitations')}
+              </button>
+            )
           }
-          {isManager &&
-          <button className="btn btn-link mr-10" onClick={handleView}>
-            {viewLinkText}
-          </button>
+          {
+            isManager && (
+              <button className="btn btn-link" onClick={handleView}>
+                {viewLinkText}
+              </button>
+            )
           }
-          <button className="btn btn-link mr-10" onClick={handleNew}>
+          <button className="btn btn-link" onClick={openImport}>
+            <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
+          </button>
+          <button className="btn btn-link" onClick={handleNew}>
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
-          </button>
-          <button className="btn btn-link mr-10" onClick={openImport}>
-          <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
           </button>
         </div>
       </div>
-      <div className="panel">
-        <div className="panel-group text-muted">
+      <div className="projects-form">
+        <div className="text-muted mb-10">
           {displayMessage}
         </div>
         <div className="search-container">
@@ -188,23 +192,29 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
             className="search-field"
           />
         </div>
+        {
+          showFilters && (
+            <ProjectFilters
+              catalogs={catalogs ?? []}
+              config={config}
+              configActions={configActions}
+              isManager={isManager}
+              projectsActions={projectsActions}
+            />
+          )
+        }
+        <div className="pull-right mt-5">
+          {
+            showFilters && (
+              <Link className="element-link mr-10 mb-10" onClick={resetAllFilters}>
+                {gettext('Reset all filters')}
+              </Link>
+            )
+          }
           <Link className="element-link mb-10" onClick={toggleFilters}>
             {showFilters ? gettext('Hide filters') : gettext('Show filters')}
           </Link>
-          {showFilters && (
-            <Link className="element-link ml-10 mb-10" onClick={resetAllFilters}>
-              {gettext('Reset all filters')}
-            </Link>
-          )}
-        {showFilters && (
-        <ProjectFilters
-          catalogs={catalogs ?? []}
-          config={config}
-          configActions={configActions}
-          isManager={isManager}
-          projectsActions={projectsActions}
-        />
-        )}
+        </div>
       </div>
       <Table
         cellFormatters={cellFormatters}
