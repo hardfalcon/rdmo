@@ -2,14 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
 import * as configActions from '../actions/configActions'
 import * as projectsActions from '../actions/projectsActions'
 import * as userActions from '../actions/userActions'
 import Projects from '../components/main/Projects'
 
 const Main = ({ config, configActions, projectsActions, projects, userActions, currentUser }) => {
-  if (!isEmpty(projects)) {
+  if (projects.ready) {
       return (
         <Projects
           config={config}
