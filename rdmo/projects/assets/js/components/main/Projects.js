@@ -236,7 +236,7 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
         <ProjectImport
           allowedTypes={allowedTypes}
           handleImport={handleImport}
-          importUrls={importUrls} />
+          importUrls={importUrls ?? []} />
       </Modal>
     </div>
   )

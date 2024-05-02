@@ -3,7 +3,7 @@ import {
   FETCH_CURRENT_USER_ERROR,
   FETCH_CURRENT_USER_INIT,
   FETCH_CURRENT_USER_SUCCESS }
-  from './types'
+  from './actionTypes'
 
 export function fetchCurrentUser() {
   return function(dispatch) {

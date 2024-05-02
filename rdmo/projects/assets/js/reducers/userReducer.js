@@ -1,5 +1,5 @@
 import { FETCH_CURRENT_USER_ERROR, FETCH_CURRENT_USER_INIT, FETCH_CURRENT_USER_SUCCESS }
-  from '../actions/types'
+  from '../actions/actionTypes'
 
 const initialState = {
   currentUser: {},

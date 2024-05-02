@@ -1,4 +1,4 @@
-import { DELETE_CONFIG, UPDATE_CONFIG } from './types'
+import { DELETE_CONFIG, UPDATE_CONFIG } from './actionTypes'
 
 export function updateConfig(path, value) {
   return {type: UPDATE_CONFIG, path, value}
