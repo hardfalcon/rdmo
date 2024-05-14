@@ -171,10 +171,10 @@ const Projects = ({ config, configActions, currentUserObject, projectsActions, p
               </button>
             )
           }
-          <button className="btn btn-link" onClick={openImport}>
+          <button id="import-project" className="btn btn-link" onClick={openImport}>
             <i className="fa fa-download" aria-hidden="true"></i> {gettext('Import project')}
           </button>
-          <button className="btn btn-link" onClick={handleNew}>
+          <button id="create-project" className="btn btn-link" onClick={handleNew}>
             <i className="fa fa-plus" aria-hidden="true"></i> {gettext('New project')}
           </button>
         </div>

@@ -141,7 +141,7 @@ const Table = ({
   }
 
   return (
-    <div className="table-container">
+    <div id="projects-table" className="table-container">
       <table className="table table-borderless">
         {renderHeaders()}
         {renderRows()}
