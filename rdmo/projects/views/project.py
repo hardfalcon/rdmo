@@ -25,6 +25,7 @@ from rdmo.questions.utils import get_widgets
 from rdmo.tasks.models import Task
 from rdmo.views.models import View
 
+from ..constants import VISIBILITY_INTERNAL
 from ..filters import ProjectFilter
 from ..models import Integration, Invite, Membership, Project, Value
 from ..utils import get_upload_accept, set_context_querystring_with_filter_and_page
@@ -40,7 +41,7 @@ class ProjectsView(LoginRequiredMixin, FilterView):
 
     def get_queryset(self):
         # prepare projects queryset for this user
-        queryset = Project.objects.filter(user=self.request.user)
+        queryset = Project.objects.filter(models.Q(user=self.request.user) | models.Q(visibility=VISIBILITY_INTERNAL))
         for instance in queryset:
             queryset |= instance.get_descendants()
         queryset = queryset.distinct()
