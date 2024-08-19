@@ -7,13 +7,11 @@ import Modal from 'rdmo/core/assets/js/components/Modal'
 import useFocusEffect from '../../../hooks/useFocusEffect'
 
 
-const PageHeadFormModal = ({ title, show, initial, onClose, onSubmit }) => {
+const PageHeadFormModal = ({ title, submitText, submitColor, show, initial, onClose, onSubmit }) => {
 
   const ref = useRef(null)
   const [inputValue, setInputValue] = useState('')
   const [hasError, setHasError] = useState(false)
-  const submitText = isEmpty(initial) ? gettext('Create') : gettext('Update')
-  const submitColor = isEmpty(initial) ? 'success' : 'primary'
 
   const handleSubmit = () => {
     if (isEmpty(inputValue) && !isNil(initial)) {
@@ -77,6 +75,8 @@ const PageHeadFormModal = ({ title, show, initial, onClose, onSubmit }) => {
 
 PageHeadFormModal.propTypes = {
   title: PropTypes.string.isRequired,
+  submitText: PropTypes.string.isRequired,
+  submitColor: PropTypes.string.isRequired,
   show: PropTypes.bool.isRequired,
   initial: PropTypes.string,
   onClose: PropTypes.func.isRequired,
