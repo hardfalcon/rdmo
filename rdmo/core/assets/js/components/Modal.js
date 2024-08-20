@@ -9,9 +9,13 @@ const Modal = ({ title, show, bsSize, submitText, submitColor, disableSubmit,
       <BootstrapModal.Header closeButton>
         <h2 className="modal-title">{title}</h2>
       </BootstrapModal.Header>
-      <BootstrapModal.Body>
-        { children }
-      </BootstrapModal.Body>
+      {
+        children && (
+          <BootstrapModal.Body>
+            { children }
+          </BootstrapModal.Body>
+        )
+      }
       <BootstrapModal.Footer>
         <button type="button" className="btn btn-default" onClick={onClose}>
           {gettext('Close')}
