@@ -1,13 +1,12 @@
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import MethodNotAllowed, NotFound
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -376,34 +375,61 @@ class ProjectValueViewSet(ProjectNestedViewSetMixin, ModelViewSet):
             # this is needed for the swagger ui
             return Value.objects.none()
 
-    @action(detail=True, methods=['DELETE'],
+    @action(detail=True, methods=['POST', 'DELETE'], url_path='set',
             permission_classes=(HasModelPermission | HasProjectPermission, ))
     def set(self, request, parent_lookup_project, pk=None):
+        if request.method == 'POST':
+            return self.copy_set(request, parent_lookup_project, pk)
+        elif request.method == 'DELETE':
+            return self.delete_set(request, parent_lookup_project, pk)
+        else:
+            raise MethodNotAllowed
+
+    def copy_set(self, request, parent_lookup_project, pk=None):
+        # copy all values for questions in questionset collections with the attribute
+        # for this value and the same set_prefix and set_index
+        currentValue = self.get_object()
+
+        # collect all values for this set and all decendants
+        currentValues = self.get_queryset().filter_set(currentValue)
+
+        # de-serialize the posted new set value and save it, use the ValueSerializer
+        # instead of ProjectValueSerializer, since the latter does not include project
+        set_value_serializer = ValueSerializer(data=request.data)
+        set_value_serializer.is_valid(raise_exception=True)
+        set_value = set_value_serializer.save()
+        set_value_data = set_value_serializer.data
+
+        # create new values for the new set
+        values = []
+        set_prefix_length = len(set_value.set_prefix.split('|'))
+        for value in currentValues:
+            value.id = None
+            if value.set_prefix == set_value.set_prefix:
+                value.set_index = set_value.set_index
+            else:
+                value.set_prefix = '|'.join([
+                    str(set_value.set_index) if (index == set_prefix_length - 1) else value
+                    for index, value in enumerate(value.set_prefix.split('|'))
+                ])
+            values.append(value)
+
+        # bulk create the new values
+        values = Value.objects.bulk_create(values)
+        values_data = [ValueSerializer(instance=value).data for value in values]
+
+        # return all new values
+        headers = self.get_success_headers(set_value_serializer.data)
+        return Response([set_value_data, *values_data], status=status.HTTP_201_CREATED, headers=headers)
+
+    def delete_set(self, request, parent_lookup_project, pk=None):
         # delete all values for questions in questionset collections with the attribute
         # for this value and the same set_prefix and set_index
-        value = self.get_object()
-        value.delete()
+        set_value = self.get_object()
+        set_value.delete()
 
-        # prefetch most elements of the catalog
-        self.project.catalog.prefetch_elements()
-
-        # collect the attributes of all questions of all pages or questionsets
-        # of this catalog, which have the attribute of this value
-        attributes = set()
-        elements = self.project.catalog.pages + self.project.catalog.questions
-        for element in elements:
-            if element.attribute == value.attribute:
-                attributes.update([descendant.attribute for descendant in element.descendants])
-
-        # construct the set_prefix for decendants for this set
-        decendants_set_prefix = f'{value.set_prefix}|{value.set_index}' if value.set_prefix else str(value.set_index)
-
-        # delete all values for this set and all decendants
-        values = self.get_queryset().filter(attribute__in=attributes) \
-                                    .filter(
-                                        Q(set_prefix=value.set_prefix, set_index=value.set_index) |
-                                        Q(set_prefix__startswith=decendants_set_prefix)
-                                    )
+        # collect all values for this set and all decendants and delete them
+        values = self.get_queryset().filter_set(set_value)
         values.delete()
 
         return Response(status=204)
