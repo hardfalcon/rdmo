@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
+from rdmo.domain.models import Attribute
 from rdmo.questions.models import Catalog
 from rdmo.services.validators import ProviderValidator
 
@@ -352,6 +353,8 @@ class SnapshotSerializer(serializers.ModelSerializer):
 
 
 class ValueSerializer(serializers.ModelSerializer):
+
+    attribute = serializers.PrimaryKeyRelatedField(queryset=Attribute.objects.all(), required=True)
 
     class Meta:
         model = Value
